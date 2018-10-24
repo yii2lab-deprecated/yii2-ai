@@ -7,8 +7,6 @@ use yii2lab\ai\domain\helpers\ClassifyHelper;
 use yii2lab\extension\yii\helpers\FileHelper;
 use yii2lab\test\Test\Unit;
 
-\Yii::setAlias('@yii2lab/ai', '@vendor/yii2lab/yii2-ai/src');
-
 class ClassifyTest extends Unit {
 	
 	const PACKAGE = 'yii2lab/yii2-ai';
