@@ -11,10 +11,24 @@ use yii2lab\domain\BaseEntity;
  * 
  * @property $id
  * @property $title
+ * @property $classes
+ * @property $trains
  */
 class BotEntity extends BaseEntity {
 
 	protected $id;
 	protected $title;
+	protected $classes;
+	protected $trains;
 
+	public function fieldType() {
+		return [
+			'id' => 'integer',
+			'classes' => [
+				'type' => ClassEntity::class,
+				'isCollection' => true,
+			],
+		];
+	}
+	
 }

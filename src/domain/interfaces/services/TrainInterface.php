@@ -13,8 +13,5 @@ use yii2lab\domain\interfaces\services\CrudInterface;
  * @property-read \yii2lab\ai\domain\interfaces\repositories\TrainInterface $repository
  */
 interface TrainInterface extends CrudInterface {
-	
-	public function allTrain($botId, $trainPercent = 100);
-	public function allTest($botId, $trainPercent = 100);
-	
+
 }

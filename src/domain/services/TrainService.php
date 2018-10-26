@@ -3,6 +3,7 @@
 namespace yii2lab\ai\domain\services;
 
 use NlpTools\Tokenizers\PennTreeBankTokenizer;
+use NlpTools\Tokenizers\WhitespaceTokenizer;
 use yii2lab\ai\domain\entities\TrainEntity;
 use yii2lab\ai\domain\interfaces\services\TrainInterface;
 use yii2lab\domain\data\Query;
@@ -27,9 +28,12 @@ class TrainService extends BaseActiveService implements TrainInterface {
 			$trainEntity->value = strtolower($trainEntity->value);
 			$trainEntity->value = StringHelper::textToLine($trainEntity->value);
 			//$trainEntity->value = preg_replace('#([^\w\s\d]+)#i', ' ', $trainEntity->value);
-			//$trainEntity->value = preg_replace('#[\.]+#', '$1', $trainEntity->value);
+			$trainEntity->value = preg_replace('#[\.]+#', '$1', $trainEntity->value);
+			$trainEntity->value = preg_replace('#[\(\)\']+#', ' ', $trainEntity->value);
 			$trainEntity->value = StringHelper::removeDoubleSpace($trainEntity->value);
 			$trainEntity->value = trim($trainEntity->value);
+			//$tok = new WhitespaceTokenizer();
+			//$trainEntity->value = $tok->tokenize($trainEntity->value);
 			//$tokenizer = new PennTreeBankTokenizer();
 			//$trainEntity->value = implode(" ",$tokenizer->tokenize($trainEntity->value));
 		}
@@ -37,36 +41,10 @@ class TrainService extends BaseActiveService implements TrainInterface {
 		return $trainCollection;
 	}
 	
-	public function allTrain($botId, $trainPercent = 100) {
-		$classIds = $this->allClassOfBot($botId);
-		$query = Query::forge();
-		$query->where(['class_id' => $classIds]);
-		$count = \App::$domain->ai->train->count();
-		$border = ($count / 100) * $trainPercent;
-		$query->offset(0);
-		$query->limit($border);
-		$collection = \App::$domain->ai->train->all($query);
+	public function all(Query $query = null) {
+		$collection = parent::all($query);
 		$collection = $this->filterValue($collection);
 		return $collection;
-	}
-	
-	public function allTest($botId, $trainPercent = 100) {
-		$classIds = $this->allClassOfBot($botId);
-		$query = Query::forge();
-		$query->where(['class_id' => $classIds]);
-		$count = \App::$domain->ai->train->count();
-		$border = ($count / 100) * $trainPercent;
-		$query->offset($border+1);
-		$collection = \App::$domain->ai->train->all($query);
-		$collection = $this->filterValue($collection);
-		return $collection;
-	}
-	
-	private function allClassOfBot($botId) {
-		$query = Query::forge();
-		$query->where(['bot_id' => $botId]);
-		$classCollection =  \App::$domain->ai->class->all($query);
-		return ArrayHelper::getColumn($classCollection, 'id');
 	}
 	
 }

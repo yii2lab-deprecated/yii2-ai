@@ -8,7 +8,7 @@ use yii2lab\extension\arrayTools\helpers\ArrayIterator;
 class SplitHelper {
 	
 	
-	public static function train($collection, $percent) {
+	public static function split($collection, $percent) {
 		$offset = (count($collection) / 100) * $percent;
 		
 		$iterator = new ArrayIterator();

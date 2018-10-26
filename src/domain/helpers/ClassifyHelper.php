@@ -2,6 +2,8 @@
 
 namespace yii2lab\ai\domain\helpers;
 
+use NlpTools\Classifiers\EndOfSentenceRules;
+use NlpTools\Tokenizers\ClassifierBasedTokenizer;
 use yii\helpers\ArrayHelper;
 use yii2lab\ai\domain\entities\TrainEntity;
 use NlpTools\Tokenizers\WhitespaceTokenizer;
@@ -93,6 +95,11 @@ class ClassifyHelper {
 	}
 	
 	private function tokensDocument($sample) {
+		/*$whitespaceTokenizer = new ClassifierBasedTokenizer(
+			new EndOfSentenceRules(),
+			new WhitespaceTokenizer()
+		);*/
+		
 		$whitespaceTokenizer = new WhitespaceTokenizer(); // will split into tokens
 		return new TokensDocument($whitespaceTokenizer->tokenize($sample));
 	}

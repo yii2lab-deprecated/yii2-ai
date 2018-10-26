@@ -18,6 +18,7 @@ class m181026_091114_create_ai_train_table extends Migration {
 	{
 		return [
 			'id' => $this->primaryKey(11)->notNull(),
+			'bot_id' => $this->integer(11)->notNull(),
 			'class_id' => $this->integer(11)->notNull(),
 			'hash' => $this->string(8)->notNull(),
 			'is_enabled' => $this->integer(1)->notNull(),
@@ -30,6 +31,13 @@ class m181026_091114_create_ai_train_table extends Migration {
 		$this->myAddForeignKey(
 			'class_id',
 			'{{%ai_class}}',
+			'id',
+			'CASCADE',
+			'CASCADE'
+		);
+		$this->myAddForeignKey(
+			'bot_id',
+			'{{%ai_bot}}',
 			'id',
 			'CASCADE',
 			'CASCADE'
