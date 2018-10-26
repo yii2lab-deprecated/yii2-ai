@@ -10,6 +10,7 @@ use NlpTools\Documents\TokensDocument;
 use NlpTools\FeatureFactories\DataAsFeatures;
 use NlpTools\Classifiers\MultinomialNBClassifier;
 use yii2lab\ai\domain\models\FeatureBasedNB;
+use yii2lab\extension\store\StoreFile;
 use yii2lab\extension\yii\helpers\FileHelper;
 
 class ClassifyHelper {
@@ -39,12 +40,19 @@ class ClassifyHelper {
 	}
 	
 	public function save($file) {
-		FileHelper::save(ROOT_DIR . DS . $file, serialize($this->model));
+		$file = FileHelper::getPath($file);
+		$store = new StoreFile($file);
+		$store->save($this->model->getData());
 	}
 	
 	public function load($file) {
-		$serialized = FileHelper::load(ROOT_DIR . DS . $file);
-		$this->model = unserialize($serialized);
+		$file = FileHelper::getPath($file);
+		$store = new StoreFile($file);
+		$this->model = new FeatureBasedNB();
+		$this->model->setData($store->load());
+		
+		//$serialized = FileHelper::load(ROOT_DIR . DS . $file);
+		//$this->model = unserialize($serialized);
 		$this->loadModel();
 	}
 	

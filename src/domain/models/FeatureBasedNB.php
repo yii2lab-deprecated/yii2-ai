@@ -8,4 +8,18 @@ class FeatureBasedNB extends \NlpTools\Models\FeatureBasedNB {
 		return array_keys($this->priors);
 	}
 	
+	public function getData() {
+		return [
+			'priors' => $this->priors,
+			'condprob' => $this->condprob,
+			'unknown' => $this->unknown,
+		];
+	}
+	
+	public function setData($data) {
+		$this->priors = $data['priors'];
+		$this->condprob = $data['condprob'];
+		$this->unknown = $data['unknown'];
+	}
+	
 }

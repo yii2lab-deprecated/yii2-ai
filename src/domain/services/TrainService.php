@@ -2,6 +2,7 @@
 
 namespace yii2lab\ai\domain\services;
 
+use NlpTools\Tokenizers\PennTreeBankTokenizer;
 use yii2lab\ai\domain\entities\TrainEntity;
 use yii2lab\ai\domain\interfaces\services\TrainInterface;
 use yii2lab\domain\data\Query;
@@ -24,10 +25,13 @@ class TrainService extends BaseActiveService implements TrainInterface {
 		/** @var TrainEntity[] $trainCollection */
 		foreach($trainCollection as $trainEntity) {
 			$trainEntity->value = strtolower($trainEntity->value);
-			//$trainEntity->value = preg_replace('#([^\w\s\d]+)#i', ' ', $trainEntity->value);
 			$trainEntity->value = StringHelper::textToLine($trainEntity->value);
+			//$trainEntity->value = preg_replace('#([^\w\s\d]+)#i', ' ', $trainEntity->value);
+			//$trainEntity->value = preg_replace('#[\.]+#', '$1', $trainEntity->value);
 			$trainEntity->value = StringHelper::removeDoubleSpace($trainEntity->value);
 			$trainEntity->value = trim($trainEntity->value);
+			//$tokenizer = new PennTreeBankTokenizer();
+			//$trainEntity->value = implode(" ",$tokenizer->tokenize($trainEntity->value));
 		}
 		//prr($trainCollection,1,1);
 		return $trainCollection;
