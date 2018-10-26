@@ -5,12 +5,12 @@ namespace yii2lab\ai\domain\interfaces\repositories;
 use yii2lab\domain\interfaces\repositories\CrudInterface;
 
 /**
- * Interface TrainInterface
+ * Interface ClassInterface
  * 
  * @package yii2lab\ai\domain\interfaces\repositories
  * 
  * @property-read \yii2lab\ai\domain\Domain $domain
  */
-interface TrainInterface extends CrudInterface {
+interface ClassInterface extends CrudInterface {
 
 }

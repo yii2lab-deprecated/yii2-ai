@@ -58,8 +58,8 @@ class ClassifyTest extends Unit {
 		$correctCount = 0;
 		/** @var TrainEntity[] $testingCollection */
 		foreach($testingCollection as $trainEntity) {
-			$prediction = $classify->predict($trainEntity->sample);
-			if($prediction == $trainEntity->label) {
+			$prediction = $classify->predict($trainEntity->value);
+			if($prediction == $trainEntity->class_id) {
 				$correctCount++;
 			}
 		}
@@ -71,11 +71,11 @@ class ClassifyTest extends Unit {
 		$rr = trim($rr);
 		$rr = explode(NS, $rr);
 		$result = [];
-		foreach($rr as $sample) {
-			if(!empty($sample)) {
-				$rt = explode(TAB, $sample);
-				$training['sample'] = $rt[1];
-				$training['label'] = $rt[0];
+		foreach($rr as $value) {
+			if(!empty($value)) {
+				$rt = explode(TAB, $value);
+				$training['value'] = $rt[1];
+				$training['class_id'] = $rt[0];
 				$result[] = new TrainEntity($training);
 			}
 		}

@@ -9,12 +9,22 @@ use yii2lab\domain\BaseEntity;
  * 
  * @package yii2lab\ai\domain\entities
  * 
- * @property $sample
- * @property $label
+ * @property $id
+ * @property $class_id
+ * @property $is_enabled
+ * @property $value
  */
 class TrainEntity extends BaseEntity {
 
-	protected $sample;
-	protected $label;
+	protected $id;
+	protected $class_id;
+	protected $hash;
+	protected $is_enabled;
+	protected $value;
 
+	public function getHash() {
+		$str = serialize([$this->class_id, $this->value]);
+		return hash('crc32b', $str);
+	}
+	
 }

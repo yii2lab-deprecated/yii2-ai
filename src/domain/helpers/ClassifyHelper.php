@@ -34,6 +34,10 @@ class ClassifyHelper {
 	 */
 	protected $trainingSet;
 	
+	public function __construct() {
+		$this->trainingSet = new TrainingSet();
+	}
+	
 	public function save($file) {
 		FileHelper::save(ROOT_DIR . DS . $file, serialize($this->model));
 	}
@@ -45,18 +49,21 @@ class ClassifyHelper {
 	}
 	
 	public function train($training) {
-		$this->trainingSet = new TrainingSet();
 		/** @var TrainEntity[] $training */
 		foreach($training as $trainEntity) {
-			$tokensDocument = $this->tokensDocument($trainEntity->sample);
-			$this->trainingSet->addDocument($trainEntity->label, $tokensDocument);
+			$this->trainItem($trainEntity);
 		}
 		$dataAsFeatures = new DataAsFeatures();
 		$this->model = new FeatureBasedNB();
 		$this->model->train($dataAsFeatures, $this->trainingSet);
 		$this->loadModel();
-		$classes = ArrayHelper::getColumn($training, 'label');
+		$classes = ArrayHelper::getColumn($training, 'class_id');
 		$this->classes = array_unique($classes);
+	}
+	
+	public function trainItem(TrainEntity $trainEntity) {
+		$tokensDocument = $this->tokensDocument($trainEntity->value);
+		$this->trainingSet->addDocument($trainEntity->class_id, $tokensDocument);
 	}
 	
 	public function predict($sample, $classes = null) {
