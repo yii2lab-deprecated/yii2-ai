@@ -39,35 +39,6 @@ class TestController extends Controller {
 		$this->hh($botEntity, $classify);
 	}
 	
-	public function actionGenerateMatrix() {
-		$size = 23;
-		$matrix = UnitFactory::createMatrix($size);
-		UnitFactory::createWalls($matrix);
-		UnitFactory::createFoods($matrix);
-		$unitCollection = UnitFactory::createUnits($matrix);
-		
-		$this->renderMatrix1($matrix);
-		
-		while(true) {
-			$info = [];
-			if(empty($unitCollection)) {
-				Output::block('Game over!');
-				return ;
-			}
-			foreach($unitCollection as $k => $unitEntity) {
-				if(!$unitEntity->isDead()) {
-					$wantCell = $unitEntity->wantCell();
-					if($wantCell) {
-						$matrix->moveCellEntity($unitEntity, $wantCell);
-					}
-					$info[] = 'unit 1: ' . $unitEntity->energy;
-				}
-			}
-			usleep(50000);
-			$this->renderMatrix1($matrix, PHP_EOL . implode(PHP_EOL, $info));
-		}
-	}
-	
 	public function actionGenerateMatrix11() {
 		$size = 16;
 		$trainCollection = [
@@ -214,6 +185,7 @@ class TestController extends Controller {
 		$text = MatrixHelper::generateMatrix($matrix);
 		$text .= $desc;
 		Output::render($text);
+		usleep($this->usleep);
 	}
 	
 	private function initChatBot($bot_id) {

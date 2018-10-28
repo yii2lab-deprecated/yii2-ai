@@ -3,8 +3,10 @@
 namespace yii2lab\ai\game\factories;
 
 use yii2lab\ai\game\entities\BlankCellEntity;
+use yii2lab\ai\game\entities\CellEntity;
 use yii2lab\ai\game\entities\FoodCellEntity;
 use yii2lab\ai\game\entities\PointEntity;
+use yii2lab\ai\game\entities\ToxicCellEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 use yii2lab\ai\game\entities\WallCellEntity;
 use yii2lab\ai\game\helpers\Matrix;
@@ -25,21 +27,9 @@ class UnitFactory {
 	}
 	
 	public static function createWalls(Matrix $matrix) {
-		
 		for($y = 1; $y < 4; $y++) {
 			self::randV($matrix);
 		}
-		
-		/*for($y = 8; $y < 15; $y++) {
-			self::createWall($matrix, 9, $y);
-		}
-		
-		for($x = 8; $x < 15; $x++) {
-			self::createWall($matrix, $x, 6);
-		}*/
-		
-		
-		
 	}
 	
 	private static function randV(Matrix $matrix) {
@@ -59,25 +49,44 @@ class UnitFactory {
 		}
 	}
 	
-	
-	public static function createWall(Matrix $matrix, $x, $y) {
+	private static function createWall(Matrix $matrix, $x, $y) {
 		$wall = new WallCellEntity();
 		$point = UnitFactory::createPoint($x, $y);
 		$matrix->setCellByPoint($point, $wall);
 	}
 	
+	
 	public static function createFoods(Matrix $matrix) {
 		foreach($matrix->getMatrix() as $x => $line) {
 			foreach($line as $y => $cell) {
 				if($cell instanceof BlankCellEntity) {
-					if(mt_rand(0,1)) {
-						$food = new FoodCellEntity();
-						$food->energy = mt_rand(1,4) * 2;
-						$matrix->setCellByPoint($cell->point, $food);
+					if(!mt_rand(0, 1)) {
+						$energy = mt_rand(1, 4) * 2;
+						self::createFood($matrix, $cell, FoodCellEntity::class, $energy);
 					}
 				}
 			}
 		}
+	}
+	
+	public static function createToxic(Matrix $matrix) {
+		foreach($matrix->getMatrix() as $x => $line) {
+			foreach($line as $y => $cell) {
+				if($cell instanceof BlankCellEntity) {
+					if(!mt_rand(0, 6)) {
+						$energy = mt_rand(1, 4) * 2;
+						self::createFood($matrix, $cell, ToxicCellEntity::class, 0 - $energy);
+					}
+				}
+			}
+		}
+	}
+	
+	private static function createFood(Matrix $matrix, CellEntity $cell, $class, $energy) {
+		$food = new $class;
+		$food->energy = $energy;
+		$matrix->setCellByPoint($cell->point, $food);
+		return $food;
 	}
 	
 	public static function createUnits(Matrix $matrix) {

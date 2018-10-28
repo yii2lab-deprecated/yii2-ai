@@ -36,7 +36,7 @@ class UnitCellEntity extends CellEntity {
 	
 	public function wantCell() {
 		if($this->isDead()) {
-			return null;
+			return false;
 		}
 		return WantHelper::getPoint($this);
 	}
