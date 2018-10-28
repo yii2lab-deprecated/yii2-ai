@@ -4,9 +4,42 @@ namespace yii2lab\ai\domain\helpers;
 
 use Phpml\Classification\KNearestNeighbors;
 use yii\helpers\ArrayHelper;
+use yii2lab\ai\domain\entities\TrainEntity;
+use yii2lab\extension\common\helpers\StringHelper;
 
 class TrainHelper {
 	
+	public static function filterValue($trainCollection) {
+		//return $trainCollection;
+		/** @var TrainEntity[] $trainCollection */
+		foreach($trainCollection as $trainEntity) {
+			$trainEntity->value = strtolower($trainEntity->value);
+			$trainEntity->value = StringHelper::textToLine($trainEntity->value);
+			//$trainEntity->value = preg_replace('#([^\w\s\d]+)#i', ' ', $trainEntity->value);
+			$trainEntity->value = preg_replace('#[\.]+#', '$1', $trainEntity->value);
+			$trainEntity->value = preg_replace('#[\(\)\']+#', ' ', $trainEntity->value);
+			$trainEntity->value = StringHelper::removeDoubleSpace($trainEntity->value);
+			$trainEntity->value = trim($trainEntity->value);
+			
+			//$trainEntity->value = self::strToInt($trainEntity->value);
+			//$tok = new WhitespaceTokenizer();
+			//$trainEntity->value = $tok->tokenize($trainEntity->value);
+			//$tokenizer = new PennTreeBankTokenizer();
+			//$trainEntity->value = implode(" ",$tokenizer->tokenize($trainEntity->value));
+		}
+		//prr($trainCollection,1,1);
+		return $trainCollection;
+	}
+	
+	public static function strToInt($word1) {
+		$int = 1;
+		$len = mb_strlen($word1);
+		for($i = $len - 1; $i >= 0; $i--) {
+			$num = intval(ord($word1{$i}));
+			$int = $int / pow($num, $i + 1);
+		}
+		return $int;
+	}
 	
 	public static function getBlankMatrix($size) {
 		$arr = [];

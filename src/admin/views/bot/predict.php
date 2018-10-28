@@ -12,7 +12,8 @@ $this->title = $entity->title;
 
 $classMap = ArrayHelper::map($entity->classes, 'id', 'title');
 $classMap = ArrayHelper::merge([0 => '- null -'], $classMap);
-//prr($classMap,1,1);
+
+//prr($model,1,1);
 
 ?>
 

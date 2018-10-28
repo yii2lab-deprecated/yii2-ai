@@ -18,7 +18,7 @@ class ClassifyTest extends Unit {
 	const TRAINING_NAME = 'training.json';
 	const TESTING_NAME = 'testing.json';
 	
-	public function testTrainAndSave() {
+	/*public function testTrainAndSave() {
 		FileHelper::remove(self::ACTUAL_PATH . self::MODEL_NAME);
 		$classify = new ClassifyHelper;
 		$trainingCollection = $this->loadCollection(self::DATA_PATH . self::TRAINING_NAME);
@@ -56,7 +56,7 @@ class ClassifyTest extends Unit {
 		$this->tester->assertEquals(1, $actual);
 		$actual = $classify->predict('Have a safe trip to Nigeria. Wish you happiness and very soon company to share moments with');
 		$this->tester->assertEquals(2, $actual);
-	}
+	}*/
 	
 	private function testCollection(EntityCollection $testingCollection, ClassifyHelper $classify) {
 		$correctCount = 0;

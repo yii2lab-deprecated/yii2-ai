@@ -66,6 +66,7 @@ class ClassifyHelper {
 		$dataAsFeatures = new DataAsFeatures();
 		$this->model = new FeatureBasedNB();
 		$this->model->train($dataAsFeatures, $this->trainingSet);
+		//prr($this->model->getData(),1,1);
 		$this->loadModel();
 		$classes = ArrayHelper::getColumn($training, 'class_id');
 		$this->classes = array_unique($classes);
@@ -101,7 +102,13 @@ class ClassifyHelper {
 		);*/
 		
 		$whitespaceTokenizer = new WhitespaceTokenizer(); // will split into tokens
-		return new TokensDocument($whitespaceTokenizer->tokenize($sample));
+		$tokinizedValue = $whitespaceTokenizer->tokenize($sample);
+		/*foreach($tokinizedValue as &$v) {
+			//$v = (string) TrainHelper::strToInt($v);
+			$v = substr($v, 0, 10);
+		}*/
+		prr($tokinizedValue,1,1);
+		return new TokensDocument($tokinizedValue);
 	}
 	
 }

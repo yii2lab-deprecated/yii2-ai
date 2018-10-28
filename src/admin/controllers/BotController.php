@@ -8,6 +8,7 @@ use yii2lab\ai\domain\entities\BotEntity;
 use yii2lab\ai\domain\entities\TrainEntity;
 use yii2lab\ai\domain\helpers\ClassifyHelper;
 use yii2lab\ai\domain\helpers\SplitHelper;
+use yii2lab\ai\domain\helpers\TrainHelper;
 use yii2lab\ai\domain\services\BotService;
 use yii2lab\domain\data\Query;
 use yii2lab\extension\web\helpers\ClientHelper;
@@ -41,27 +42,35 @@ class BotController extends Controller {
 	public function actions() {
 		$actions = parent::actions();
 		$actions['index']['render'] = '@yii2lab/ai/admin/views/bot/index';
-		$actions['index']['query'] = Query::forge(ClientHelper::getQueryFromRequest())/*->with('classes')*/
-		;
+		$actions['index']['query'] = Query::forge(ClientHelper::getQueryFromRequest());
 		$actions['view']['render'] = '@yii2lab/ai/admin/views/bot/view';
 		$actions['view']['query'] = Query::forge(ClientHelper::getQueryFromRequest())->with('classes');
 		return $actions;
 	}
 	
 	public function actionPredict($bot_id) {
+		$model = new PredictForm;
 		$query = Query::forge();
 		$query->with(['classes', 'trains']);
 		/** @var BotEntity $botEntity */
 		$botEntity = \App::$domain->ai->bot->oneById($bot_id, $query);
 		if(\Yii::$app->request->isPost) {
 			$post = \Yii::$app->request->post('PredictForm', []);
-			$model = new PredictForm;
 			\Yii::configure($model, $post);
 			if($model->validate()) {
 				$submit = \Yii::$app->request->post('submit');
 				if($submit == 'predict') {
 					$classify = new ClassifyHelper;
-					$classify->train($botEntity->trains);
+					
+					$trains = $botEntity->trains;
+					$classify->train($trains);
+					
+					$trains = array_reverse($trains);
+					$classify->train($trains);
+					
+					shuffle($trains);
+					$classify->train($trains);
+					
 					//$classify->load('common/runtime/ai/train/bot_'.$botEntity->id.'.json');
 					$model->class_id = $classify->predict($model->value);
 				} elseif($submit == 'save') {
@@ -87,6 +96,7 @@ class BotController extends Controller {
 		/** @var BotEntity $botEntity */
 		$botEntity = \App::$domain->ai->bot->oneById($bot_id, $query);
 		$classify = new ClassifyHelper;
+		
 		$classify->train($botEntity->trains);
 		$classify->save('common/runtime/ai/train/bot_' . $botEntity->id . '.json');
 		\App::$domain->navigation->alert->create(['ai/bot', 'success_trained_message']);
@@ -94,34 +104,48 @@ class BotController extends Controller {
 	}
 	
 	public function actionTest($bot_id) {
-		$trainPercent = 96;
+		$trainPercent = 95;
 		$query = Query::forge();
 		$query->with(['classes', 'trains']);
 		/** @var BotEntity $botEntity */
 		$botEntity = \App::$domain->ai->bot->oneById($bot_id, $query);
+		$collection = TrainHelper::filterValue($botEntity->trains);
+		$splitCollection = SplitHelper::split($collection, $trainPercent);
 		
-		$splitCollection = SplitHelper::split($botEntity->trains, $trainPercent);
+		//prr($splitCollection,1,1);
 		
 		$classify = new ClassifyHelper;
-		$classify->train($splitCollection->train);
+		
+		$trains = $splitCollection->train;
+		$classify->train($trains);
+		
+		/*$trains = array_reverse($trains);
+		$classify->train($trains);
+		
+		shuffle($trains);
+		$classify->train($trains);*/
+		
+		//$classify->train($splitCollection->train);
 		//$classify->save('common/runtime/ai/train/bot_'.$botEntity->id.'.json');
 		
-		$errors = 0;
+		$errorCollection = [];
 		/** @var TrainEntity[] $testCollection */
 		foreach($splitCollection->test as $trainEntity) {
 			$actual = $classify->predict($trainEntity->value);
 			if($actual != $trainEntity->class_id) {
-				$errors++;
+				$errorCollection[] = $trainEntity;
 			}
 		}
+		
+		$errors = count($errorCollection);
 		$errorsPercent = ($errors / count($splitCollection->test)) * 100;
 		
 		$result = [
-			'total_all' => count($botEntity->trains),
-			'total_train' => count($splitCollection->train),
-			'total_test' => count($splitCollection->test),
+			'total_all' => count($botEntity->trains) . ' (100%)',
+			'total_train' => count($splitCollection->train) . ' (' . $trainPercent . '%)',
+			'total_test' => count($splitCollection->test) . ' (' . (100 - $trainPercent) . '%)',
 			'total_error' => $errors,
-			'total_success' => count($splitCollection->test) - $errors,
+			'total_success' => count($splitCollection->test) - $errors . ' (' . (100 - round($errorsPercent, 2)) . '%)',
 			'percent_error' => round($errorsPercent, 2),
 		];
 		
@@ -132,7 +156,9 @@ class BotController extends Controller {
 		}
 		
 		return $this->render('test', [
+			'entity' => $botEntity,
 			'result' => $result,
+			'errorCollection' => $errorCollection,
 		]);
 	}
 	
