@@ -15,9 +15,12 @@ use yii2lab\ai\game\entities\FoodCellEntity;
 use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 use yii2lab\ai\game\enums\ColorEnum;
+use yii2lab\ai\game\factories\UnitFactory;
 use yii2lab\ai\game\helpers\Matrix;
 use yii2lab\ai\game\helpers\MatrixHelper;
+use yii2lab\domain\data\EntityCollection;
 use yii2lab\domain\data\Query;
+use yii2lab\extension\arrayTools\helpers\Collection;
 use yii2lab\extension\console\base\Controller;
 use yii2lab\extension\console\helpers\input\Enter;
 use yii2lab\extension\console\helpers\input\Select;
@@ -36,96 +39,36 @@ class TestController extends Controller {
 		$this->hh($botEntity, $classify);
 	}
 	
-	private function randPoint1($cellEntity) {
-		$pp = clone $cellEntity->point;
-		$pp->y = $pp->y + mt_rand(-1, 1);
-		$pp->x = $pp->x + mt_rand(-1, 1);
-		return $pp;
-	}
-	
-	private function randPoint(CellEntity $cellEntity) {
-		$p = clone $cellEntity->point;
-		do {
-			$pp = $this->randPoint1($cellEntity);
-			$nextCell = $cellEntity->matrix->getCellByPoint($pp);
-			if($nextCell !== null) {
-				if($nextCell->color == ColorEnum::GREEN) {
-					$p = $pp;
-				}
-			}
-		} while($p == $cellEntity->point);
-		return $p;
-	}
-	
 	public function actionGenerateMatrix() {
 		$size = 16;
-		$matrix = new Matrix();
-		$foodCellEntity = new FoodCellEntity();
-		$matrix->createMatrix($size, $size, $foodCellEntity);
+		$matrix = UnitFactory::createMatrix($size);
 		
-		$pointEntity = new PointEntity();
-		$pointEntity->y = 15;
-		$pointEntity->x = 15;
-		
-		/*$unitEntity = new UnitCellEntity();
-		$unitEntity->color = ColorEnum::BLUE;
-		$unitEntity->point = $pointEntity;
-		$matrix->setCellByPoint($pointEntity, $unitEntity);*/
-		
-		
-		$unitEntity = $matrix->getCellByPoint($pointEntity);
-		//$unitEntity->point = $pointEntity;
-		$unitEntity->color = ColorEnum::BLUE;
+		/** @var UnitCellEntity[] $unitCollection */
+		$unitCollection = [];
+		$unitCollection[] = UnitFactory::createUnit($matrix, 2, 2);
+		$unitCollection[] = UnitFactory::createUnit($matrix, 2, 15);
+		$unitCollection[] = UnitFactory::createUnit($matrix, 15, 2);
+		$unitCollection[] = UnitFactory::createUnit($matrix, 15, 15);
 		
 		$this->renderMatrix1($matrix);
 		
 		while(true) {
-			$p = $this->randPoint($unitEntity);
-			$nextCell = $unitEntity->matrix->getCellByPoint($p);
-			$unitEntity->moveTo($p);
-			if($nextCell->color == ColorEnum::GREEN) {
-				$unitEntity->upEnergy();
-				$unitEntity->content = $unitEntity->energy;
+			$info = [];
+			if(empty($unitCollection)) {
+				Output::block('Game over!');
+				return ;
+			}
+			foreach($unitCollection as $k => $unitEntity) {
+				if(!$unitEntity->isDead()) {
+					$wantCell = $unitEntity->wantCell();
+					if($wantCell) {
+						$matrix->moveCellEntity($unitEntity, $wantCell);
+					}
+					$info[] = 'unit 1: ' . $unitEntity->energy;
+				}
 			}
 			usleep(50000);
-			$this->renderMatrix1($matrix, "x: {$unitEntity->point->x}, y: {$unitEntity->point->y}, energy: {$unitEntity->energy}");
-		}
-		
-		usleep(300000);
-		$unitEntity->moveUp();
-		$this->renderMatrix1($matrix);
-		
-		usleep(300000);
-		$unitEntity->moveDown();
-		$this->renderMatrix1($matrix);
-		
-		usleep(300000);
-		$unitEntity->moveLeft();
-		$this->renderMatrix1($matrix);
-		
-		usleep(300000);
-		$unitEntity->moveRight();
-		$this->renderMatrix1($matrix);
-		
-		//prr($unitEntity,1,1);
-		
-		/*$toPointEntity = new PointEntity();
-		$toPointEntity->y = 3;
-		$toPointEntity->x = 4;
-		
-		$matrix->moveCell($pointEntity, $toPointEntity);*/
-		
-		return;
-		
-		
-		$countIteration = $size * $size;
-		for($i = 0; $i < $countIteration; $i++) {
-			$x = mt_rand(1, $size - 1);
-			$y = mt_rand(1, $size - 1);
-			$unitEntity = $matrix->getCell($x, $y);
-			$unitEntity->color = mt_rand(40, 46);
-			$this->renderMatrix1($matrix);
-			usleep(1000);
+			$this->renderMatrix1($matrix, PHP_EOL . implode(PHP_EOL, $info));
 		}
 	}
 	
