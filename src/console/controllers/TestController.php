@@ -40,15 +40,11 @@ class TestController extends Controller {
 	}
 	
 	public function actionGenerateMatrix() {
-		$size = 16;
+		$size = 23;
 		$matrix = UnitFactory::createMatrix($size);
-		
-		/** @var UnitCellEntity[] $unitCollection */
-		$unitCollection = [];
-		$unitCollection[] = UnitFactory::createUnit($matrix, 2, 2);
-		$unitCollection[] = UnitFactory::createUnit($matrix, 2, 15);
-		$unitCollection[] = UnitFactory::createUnit($matrix, 15, 2);
-		$unitCollection[] = UnitFactory::createUnit($matrix, 15, 15);
+		UnitFactory::createWalls($matrix);
+		UnitFactory::createFoods($matrix);
+		$unitCollection = UnitFactory::createUnits($matrix);
 		
 		$this->renderMatrix1($matrix);
 		

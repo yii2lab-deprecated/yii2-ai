@@ -7,6 +7,7 @@ use yii2lab\ai\game\entities\BlankCellEntity;
 use yii2lab\ai\game\entities\CellEntity;
 use yii2lab\ai\game\entities\FoodCellEntity;
 use yii2lab\ai\game\entities\PointEntity;
+use yii2lab\ai\game\entities\UnitCellEntity;
 use yii2lab\ai\game\exceptions\PointOverMatrixException;
 use yii2lab\extension\yii\helpers\ArrayHelper;
 
@@ -16,13 +17,21 @@ class Matrix {
 	private $height;
 	private $width;
 	
+	public function getHeight() {
+		return $this->height;
+	}
+	
+	public function getWidth() {
+		return $this->width;
+	}
+	
 	public function __construct($height, $width, CellEntity $blankCellEntity = null) {
 		$this->height = $height;
 		$this->width = $width;
 		$this->createMatrix($height, $width, $blankCellEntity);
 	}
 	
-	public function onMove(CellEntity $cellEntity, CellEntity $toCellEntity) {
+	private function onMove(UnitCellEntity $cellEntity, CellEntity $toCellEntity) {
 		if($toCellEntity instanceof FoodCellEntity) {
 			$cellEntity->upEnergy($toCellEntity->energy);
 		} else {
@@ -30,7 +39,7 @@ class Matrix {
 		}
 	}
 	
-	public function moveCellEntity(CellEntity $cellEntity, PointEntity $toPointEntity) {
+	public function moveCellEntity(UnitCellEntity $cellEntity, PointEntity $toPointEntity) {
 		$fromPointEntity = clone $cellEntity->point;
 		$toCellEntity = $this->getCellByPoint($toPointEntity);
 		$this->onMove($cellEntity, $toCellEntity);
@@ -43,11 +52,12 @@ class Matrix {
 		$endX = $pointEntity->x + $size;
 		$beginY = $pointEntity->y - $size;
 		$endY = $pointEntity->y + $size;
+		/** @var CellEntity[][] $res */
 		$res = [];
 		for($x = $beginX; $x <= $endX; $x++) {
 			$line = [];
 			for($y = $beginY; $y <= $endY; $y++) {
-				$line[] = $this->matrix[$x][$y];
+				$line[] = $this->matrix[ $x ][ $y ];
 			}
 			$res[] = $line;
 		}
@@ -65,7 +75,7 @@ class Matrix {
 		} catch(\Exception $e) {
 			return null;
 		}
-		return ArrayHelper::getValue($this->matrix, $pointEntity->x . DOT .  $pointEntity->y, null);
+		return ArrayHelper::getValue($this->matrix, $pointEntity->x . DOT . $pointEntity->y, null);
 	}
 	
 	public function setCellByPoint(PointEntity $pointEntity, CellEntity $cellEntity = null) {
@@ -73,7 +83,7 @@ class Matrix {
 		$this->forgeCellEntity($cellEntity, $pointEntity);
 		$cellEntity->point = clone $pointEntity;
 		$cellEntity->validate();
-		$this->matrix[$pointEntity->x][$pointEntity->y] = $cellEntity;
+		$this->matrix[ $pointEntity->x ][ $pointEntity->y ] = $cellEntity;
 	}
 	
 	public function removeCellByPoint(PointEntity $pointEntity) {

@@ -11,17 +11,12 @@ use yii2lab\ai\game\enums\ColorEnum;
  *
  * @property $energy
  */
-class FoodCellEntity extends CellEntity {
+class WallCellEntity extends CellEntity {
 
-	public $color = ColorEnum::GREEN;
-	protected $energy = 2;
+	public $color = ColorEnum::YELLOW;
 	
 	public function isCanReplace() {
-		return true;
+		return false;
 	}
-	
-	/*public function getContent() {
-		return $this->energy;
-	}*/
 	
 }

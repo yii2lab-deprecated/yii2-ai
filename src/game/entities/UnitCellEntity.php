@@ -13,8 +13,12 @@ use yii2lab\ai\game\helpers\WantHelper;
  */
 class UnitCellEntity extends CellEntity {
 	
-	public $color = ColorEnum::BLUE;
+	protected $color = ColorEnum::BLUE;
 	private $energy = 10;
+	
+	public function isCanReplace() {
+		return false;
+	}
 	
 	public function getColor() {
 		if($this->isDead()) {
@@ -25,7 +29,7 @@ class UnitCellEntity extends CellEntity {
 	
 	public function getContent() {
 		if($this->isDead()) {
-			return 'x';
+			return 'xx';
 		}
 		return '..';
 	}

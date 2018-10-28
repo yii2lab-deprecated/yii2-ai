@@ -2,6 +2,7 @@
 
 namespace yii2lab\ai\game\helpers;
 
+use yii2lab\ai\game\entities\CellEntity;
 use yii2lab\ai\game\entities\FoodCellEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 
@@ -46,9 +47,10 @@ class WantHelper {
 	
 	private static function getPossibles($map) {
 		$possibles = [];
+		/** @var CellEntity[][] $map */
 		foreach($map as $line) {
 			foreach($line as $cell) {
-				if($cell != null) {
+				if($cell != null && $cell->isCanReplace()) {
 					$possibles[] = $cell;
 				}
 			}
