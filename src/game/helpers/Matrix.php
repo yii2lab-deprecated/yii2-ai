@@ -16,7 +16,7 @@ use yii2lab\extension\yii\helpers\ArrayHelper;
 class Matrix {
 	
 	/**
-	 * @var CellEntity[]
+	 * @var CellEntity[][]
 	 */
 	private $matrix = [];
 	private $height;
@@ -66,7 +66,15 @@ class Matrix {
 		return $possibles;
 	}
 	
-	public function getCellsByPoint(PointEntity $pointEntity, $size = 1) {
+	public function setCellByPoint(PointEntity $pointEntity, CellEntity $cellEntity = null) {
+		$this->validatePoint($pointEntity);
+		$this->forgeCellEntity($cellEntity, $pointEntity);
+		$cellEntity->point = clone $pointEntity;
+		$cellEntity->validate();
+		$this->matrix[ $pointEntity->x ][ $pointEntity->y ] = $cellEntity;
+	}
+	
+	private function getCellsByPoint(PointEntity $pointEntity, $size = 1) {
 		$beginX = $pointEntity->x - $size;
 		$endX = $pointEntity->x + $size;
 		$beginY = $pointEntity->y - $size;
@@ -81,14 +89,6 @@ class Matrix {
 			$res[] = $line;
 		}
 		return $res;
-	}
-	
-	public function setCellByPoint(PointEntity $pointEntity, CellEntity $cellEntity = null) {
-		$this->validatePoint($pointEntity);
-		$this->forgeCellEntity($cellEntity, $pointEntity);
-		$cellEntity->point = clone $pointEntity;
-		$cellEntity->validate();
-		$this->matrix[ $pointEntity->x ][ $pointEntity->y ] = $cellEntity;
 	}
 	
 	private function removeCellByPoint(PointEntity $pointEntity) {

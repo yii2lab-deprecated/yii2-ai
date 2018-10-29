@@ -4,6 +4,8 @@ namespace yii2lab\ai\game\helpers;
 
 use yii2lab\ai\game\entities\unit\BotEntity;
 use yii2lab\ai\game\factories\UnitFactory;
+use yii2lab\ai\game\interfaces\RenderInterface;
+use yii2lab\extension\common\helpers\ClassHelper;
 
 class Game {
 	
@@ -13,7 +15,11 @@ class Game {
 	 * @var Matrix
 	 */
 	private $matrix;
-	private $outputHandler;
+	
+	/**
+	 * @var RenderInterface
+	 */
+	private $render;
 	
 	/**
 	 * @var BotEntity[]
@@ -36,8 +42,8 @@ class Game {
 		} while($this->hasUnits());
 	}
 	
-	public function setOutputHandler($value) {
-		$this->outputHandler = $value;
+	public function setRender($definition) {
+		$this->render = ClassHelper::createObject($definition, [], RenderInterface::class);
 	}
 	
 	private function hasUnits() {
@@ -53,8 +59,7 @@ class Game {
 	}
 	
 	private function runOutputHandler() {
-		$info = $this->getUnitsInfo();
-		call_user_func($this->outputHandler, $this->matrix, $info);
+		$this->render->render($this->matrix->getMatrix());
 	}
 	
 	private function getAllUnits() {
@@ -65,16 +70,6 @@ class Game {
 			}
 		}
 		return $units;
-	}
-	
-	private function getUnitsInfo() {
-		$info = [];
-		foreach($this->unitCollection as $k => $botEntity) {
-			if(!$botEntity->isDead()) {
-				$info[] = 'unit '.$k.': ' . $botEntity->energy;
-			}
-		}
-		return $info;
 	}
 	
 }
