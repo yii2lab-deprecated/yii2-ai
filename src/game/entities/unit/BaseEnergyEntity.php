@@ -11,7 +11,10 @@ use yii2lab\domain\exceptions\ReadOnlyException;
  *
  * @property $energy
  */
-class BaseEnergyEntity extends BaseUnitEntity {
+abstract class BaseEnergyEntity extends BaseUnitEntity {
+	
+	const EVENT_BEFORE_CHANGE_ENERGY = 'EVENT_BEFORE_CHANGE_ENERGY';
+	const EVENT_AFTER_CHANGE_ENERGY = 'EVENT_AFTER_CHANGE_ENERGY';
 	
 	private $energy;
 	
@@ -20,26 +23,42 @@ class BaseEnergyEntity extends BaseUnitEntity {
 	}
 	
 	public function kill() {
-		return $this->energy = 0;
+		$this->setEnergyNative(0);
 	}
 
 	public function upEnergy($step = 1) {
-		$this->energy = $this->getEnergy() + $step;
+		$value = $this->getEnergy() + $step;
+		$this->setEnergyNative($value);
 	}
 	
 	public function downEnergy($step = 1) {
-		$this->energy = $this->getEnergy() - $step;
+		$value = $this->getEnergy() - $step;
+		$this->setEnergyNative($value);
 	}
 	
 	public function getEnergy() {
 		return $this->energy;
 	}
 	
+	protected function setEnergyNative($value) {
+		$this->beforeChangeEnergyTrigger();
+		$this->energy = $value;
+		$this->afterChangeEnergyTrigger();
+	}
+	
 	public function setEnergy($value) {
 		if(isset($this->energy)) {
 			throw new ReadOnlyException('Energy attribute read only!');
 		}
-		$this->energy = $value;
+		$this->setEnergyNative($value);
+	}
+	
+	public function beforeChangeEnergyTrigger() {
+		$this->trigger(self::EVENT_BEFORE_CHANGE_ENERGY);
+	}
+	
+	public function afterChangeEnergyTrigger() {
+		$this->trigger(self::EVENT_AFTER_CHANGE_ENERGY);
 	}
 	
 }

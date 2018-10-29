@@ -53,11 +53,13 @@ class Matrix {
 	}
 	
 	public function moveBaseUnitEntity(BotEntity $BaseUnitEntity, PointEntity $toPointEntity) {
+		$BaseUnitEntity->beforeMoveTrigger();
 		$fromPointEntity = clone $BaseUnitEntity->point;
 		$toBaseUnitEntity = $this->getCellByPoint($toPointEntity);
 		$this->onMove($BaseUnitEntity, $toBaseUnitEntity);
 		$this->setCellByPoint($toPointEntity, $BaseUnitEntity);
 		$this->removeCellByPoint($fromPointEntity);
+		$BaseUnitEntity->afterMoveTrigger();
 	}
 	
 	public function getPossibleCollection(PointEntity $pointEntity) {
