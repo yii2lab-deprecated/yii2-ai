@@ -3,7 +3,6 @@
 namespace yii2lab\ai\game\entities\unit;
 
 use yii2lab\ai\game\entities\PointEntity;
-use yii2lab\ai\game\enums\ColorEnum;
 use yii2lab\ai\game\interfaces\BotLogicInterface;
 use yii2lab\extension\common\helpers\ClassHelper;
 

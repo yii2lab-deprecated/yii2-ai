@@ -41,18 +41,6 @@ abstract class CellEntity extends BaseEntity {
 		];
 	}
 	
-	/*protected function getPoint() {
-		return $this->point;
-	}
-	
-	public function setPoint($value) {
-		if(isset($this->point)) {
-			throw new ReadOnlyException('Point already assigned!');
-		}
-		ClassHelper::isInstanceOf($value, PointEntity::class);
-		$this->point = $value;
-	}*/
-	
 	protected function getMatrix() {
 		return $this->matrix;
 	}
