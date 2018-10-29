@@ -3,7 +3,6 @@
 namespace yii2lab\ai\game\entities;
 
 use yii2lab\ai\game\enums\ColorEnum;
-use yii2lab\ai\game\helpers\WantHelper;
 
 /**
  * Class UnitCellEntity
@@ -15,6 +14,15 @@ class UnitCellEntity extends CellEntity {
 	
 	protected $color = ColorEnum::BLUE;
 	private $energy = 10;
+	
+	/**
+	 * @var Object
+	 */
+	private $logicInstance;
+	
+	public function setLogicInstance($logicClass) {
+		$this->logicInstance = \Yii::createObject($logicClass);
+	}
 	
 	public function isCanReplace() {
 		return false;
@@ -34,11 +42,14 @@ class UnitCellEntity extends CellEntity {
 		return '..';
 	}
 	
+	/**
+	 * @return PointEntity|boolean
+	 */
 	public function wantCell() {
 		if($this->isDead()) {
 			return false;
 		}
-		return WantHelper::getPoint($this);
+		return $this->logicInstance->getPoint($this);
 	}
 	
 	public function isDead() {
@@ -62,22 +73,22 @@ class UnitCellEntity extends CellEntity {
 	private function setEnergy($value) {
 		$this->energy = $value;
 		//$this->content = $value;
-		if($this->energy == 0) {
-			$this->kill('Low energy');
-		}
+		/*if($this->energy == 0) {
+			//$this->kill('Low energy');
+		}*/
 		/*if($this->energy == 20) {
 			$this->kill('Higth energy');
 		}*/
 	}
 	
-	private function kill($message = null) {
-		$this->matrix->removeCellByPoint($this->point);
+	/*private function kill($message = null) {
+		//$this->matrix->removeCellByPoint($this->point);
 		//$this->color = ColorEnum::CYAN;
 		//$this->matrix = null;
 		//throw new DeadUnitException($message);
 	}
 	
-	/*public function step($dir, $count = 1) {
+	public function step($dir, $count = 1) {
 		if($dir == self::DIR_UP) {
 			$this->moveUp($count);
 		} elseif($dir == self::DIR_LEFT) {

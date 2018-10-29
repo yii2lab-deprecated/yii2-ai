@@ -13,6 +13,9 @@ use yii2lab\extension\yii\helpers\ArrayHelper;
 
 class Matrix {
 	
+	/**
+	 * @var CellEntity[]
+	 */
 	private $matrix = [];
 	private $height;
 	private $width;
@@ -64,20 +67,6 @@ class Matrix {
 		return $res;
 	}
 	
-	/**
-	 * @param PointEntity $pointEntity
-	 *
-	 * @return CellEntity
-	 */
-	public function getCellByPoint(PointEntity $pointEntity) {
-		try {
-			$this->validatePoint($pointEntity);
-		} catch(\Exception $e) {
-			return null;
-		}
-		return ArrayHelper::getValue($this->matrix, $pointEntity->x . DOT . $pointEntity->y, null);
-	}
-	
 	public function setCellByPoint(PointEntity $pointEntity, CellEntity $cellEntity = null) {
 		$this->validatePoint($pointEntity);
 		$this->forgeCellEntity($cellEntity, $pointEntity);
@@ -86,13 +75,27 @@ class Matrix {
 		$this->matrix[ $pointEntity->x ][ $pointEntity->y ] = $cellEntity;
 	}
 	
-	public function removeCellByPoint(PointEntity $pointEntity) {
+	public function getMatrix() {
+		return $this->matrix;
+	}
+	
+	private function removeCellByPoint(PointEntity $pointEntity) {
 		$this->validatePoint($pointEntity);
 		$this->createCellEntity($pointEntity, BlankCellEntity::class);
 	}
 	
-	public function getMatrix() {
-		return $this->matrix;
+	/**
+	 * @param PointEntity $pointEntity
+	 *
+	 * @return CellEntity
+	 */
+	private function getCellByPoint(PointEntity $pointEntity) {
+		try {
+			$this->validatePoint($pointEntity);
+		} catch(\Exception $e) {
+			return null;
+		}
+		return ArrayHelper::getValue($this->matrix, $pointEntity->x . DOT . $pointEntity->y, null);
 	}
 	
 	private function createMatrix(int $h, int $v, CellEntity $blankCellEntity = null) {

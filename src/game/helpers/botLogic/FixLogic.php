@@ -1,12 +1,12 @@
 <?php
 
-namespace yii2lab\ai\game\helpers;
+namespace yii2lab\ai\game\helpers\botLogic;
 
 use yii2lab\ai\game\entities\CellEntity;
 use yii2lab\ai\game\entities\FoodCellEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 
-class WantHelper {
+class FixLogic {
 	
 	public static function getPoint(UnitCellEntity $unitCellEntity) {
 		$map = $unitCellEntity->matrix->getCellsByPoint($unitCellEntity->point);

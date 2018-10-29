@@ -10,6 +10,7 @@ use yii2lab\ai\game\entities\ToxicCellEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 use yii2lab\ai\game\entities\WallCellEntity;
 use yii2lab\ai\game\helpers\Matrix;
+use yii2lab\ai\game\helpers\botLogic\FixLogic;
 
 class UnitFactory {
 	
@@ -19,7 +20,7 @@ class UnitFactory {
 		return $matrix;
 	}
 	
-	public static function createPoint($x, $y) {
+	private static function createPoint($x, $y) {
 		$pointEntity = new PointEntity();
 		$pointEntity->y = $x;
 		$pointEntity->x = $y;
@@ -90,16 +91,35 @@ class UnitFactory {
 	}
 	
 	public static function createUnits(Matrix $matrix) {
+		$points = [
+			[
+				'x' => 2,
+				'y' => 2,
+			],
+			[
+				'x' => 2,
+				'y' => 15,
+			],
+			[
+				'x' => 15,
+				'y' => 2,
+			],
+			[
+				'x' => 15,
+				'y' => 15,
+			],
+		];
 		/** @var UnitCellEntity[] $unitCollection */
 		$unitCollection = [];
-		$unitCollection[] = UnitFactory::createUnit($matrix, 2, 2);
-		$unitCollection[] = UnitFactory::createUnit($matrix, 2, 15);
-		$unitCollection[] = UnitFactory::createUnit($matrix, 15, 2);
-		$unitCollection[] = UnitFactory::createUnit($matrix, 15, 15);
+		foreach($points as $point) {
+			$unitCellEntity = UnitFactory::createUnit($matrix, $point['x'], $point['y']);
+			$unitCellEntity->setLogicInstance(FixLogic::class);
+			$unitCollection[] = $unitCellEntity;
+		}
 		return $unitCollection;
 	}
 	
-	public static function createUnit(Matrix $matrix, $x, $y) {
+	private static function createUnit(Matrix $matrix, $x, $y) {
 		$pointEntity = self::createPoint($x, $y);
 		$unitEntity = new UnitCellEntity();
 		$matrix->setCellByPoint($pointEntity, $unitEntity);
