@@ -13,7 +13,7 @@ class EvolutionController extends Controller {
 		$size = 23;
 		$game = new Game($size);
 		$game->setOutputHandler([$this, 'renderMatrix']);
-		$game->run(4);
+		$game->run(2);
 		Output::block('Game over!');
 	}
 	

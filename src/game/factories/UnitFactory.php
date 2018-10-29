@@ -11,7 +11,7 @@ use yii2lab\ai\game\entities\ToxicCellEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 use yii2lab\ai\game\entities\WallCellEntity;
 use yii2lab\ai\game\events\UnitEvent;
-use yii2lab\ai\game\helpers\botLogic\FixLogic;
+use yii2lab\ai\game\helpers\botLogic\StepLogic;
 use yii2lab\ai\game\helpers\Matrix;
 use yii2lab\ai\game\scenario\factory\unit\CreateUnitScenario;
 use yii2lab\ai\game\scenario\factory\unit\SetUnitEnergyScenario;
@@ -30,7 +30,7 @@ class UnitFactory {
 		],
 		[
 			'class' => SetUnitLogicScenario::class,
-			'logicClass' => FixLogic::class,
+			'logicClass' => StepLogic::class,
 		],
 	];
 	
@@ -75,7 +75,6 @@ class UnitFactory {
 		$point = UnitFactory::createPoint($x, $y);
 		$matrix->setCellByPoint($point, $wall);
 	}
-	
 	
 	public static function createFoods(Matrix $matrix) {
 		foreach($matrix->getMatrix() as $x => $line) {

@@ -7,7 +7,7 @@ use yii2lab\ai\game\entities\FoodCellEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 use yii2lab\extension\scenario\base\BaseScenario;
 
-class FoodScenario extends BaseScenario {
+class EnergyScenario extends BaseScenario {
 	
 	public function run() {
 		$data = $this->getData();

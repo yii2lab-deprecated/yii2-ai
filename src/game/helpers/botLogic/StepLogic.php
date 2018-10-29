@@ -7,7 +7,7 @@ use yii2lab\ai\game\entities\FoodCellEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 use yii2lab\ai\game\helpers\MatrixHelper;
 
-class FixLogic {
+class StepLogic {
 	
 	public static function getPoint(UnitCellEntity $unitCellEntity) {
 		$possibles = self::getPossibles($unitCellEntity);

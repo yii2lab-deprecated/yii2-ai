@@ -8,7 +8,7 @@ use yii2lab\ai\game\entities\CellEntity;
 use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 use yii2lab\ai\game\exceptions\PointOverMatrixException;
-use yii2lab\ai\game\scenario\step\FoodScenario;
+use yii2lab\ai\game\scenario\step\EnergyScenario;
 use yii2lab\extension\scenario\collections\ScenarioCollection;
 use yii2lab\extension\yii\helpers\ArrayHelper;
 
@@ -41,7 +41,7 @@ class Matrix {
 	
 	private function onMove(UnitCellEntity $fromCellEntity, CellEntity $toCellEntity) {
 		$filters = [
-			FoodScenario::class,
+			EnergyScenario::class,
 		];
 		$filterCollection = new ScenarioCollection($filters);
 		$filterCollection->runAll([

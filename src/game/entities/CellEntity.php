@@ -19,11 +19,6 @@ use yii2lab\domain\exceptions\ReadOnlyException;
  */
 abstract class CellEntity extends BaseEntity {
 	
-	const DIR_UP = 1;
-	const DIR_RIGHT = 2;
-	const DIR_DOWN = 3;
-	const DIR_LEFT = 4;
-	
 	protected $color;
 	protected $content;
 	private $matrix;
@@ -57,7 +52,7 @@ abstract class CellEntity extends BaseEntity {
 	
 	public function setMatrix($value) {
 		if(isset($this->matrix)) {
-			//throw new ReadOnlyException('Matrix already assigned!');
+			throw new ReadOnlyException('Matrix already assigned!');
 		}
 		$this->matrix = $value;
 	}

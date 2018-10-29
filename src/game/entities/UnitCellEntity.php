@@ -13,6 +13,11 @@ use yii2lab\domain\exceptions\ReadOnlyException;
  */
 class UnitCellEntity extends CellEntity {
 	
+	const DIR_UP = 1;
+	const DIR_RIGHT = 2;
+	const DIR_DOWN = 3;
+	const DIR_LEFT = 4;
+	
 	private $energy;
 	
 	/**
