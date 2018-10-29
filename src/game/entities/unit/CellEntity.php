@@ -14,15 +14,11 @@ use yii2lab\extension\common\helpers\ClassHelper;
  *
  * @package yii2lab\ai\game\entities\unit
  *
- * @property $color
- * @property $content
  * @property PointEntity $point
  * @property Matrix $matrix
  */
 abstract class CellEntity extends BaseEntity {
 	
-	protected $color;
-	protected $content;
 	protected $point;
 	private $matrix;
 	
@@ -44,6 +40,18 @@ abstract class CellEntity extends BaseEntity {
 			[['matrix', 'point'], 'required'],
 		];
 	}
+	
+	/*protected function getPoint() {
+		return $this->point;
+	}
+	
+	public function setPoint($value) {
+		if(isset($this->point)) {
+			throw new ReadOnlyException('Point already assigned!');
+		}
+		ClassHelper::isInstanceOf($value, PointEntity::class);
+		$this->point = $value;
+	}*/
 	
 	protected function getMatrix() {
 		return $this->matrix;

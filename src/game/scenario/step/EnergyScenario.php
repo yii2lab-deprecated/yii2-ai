@@ -25,10 +25,10 @@ class EnergyScenario extends BaseScenario {
 		if($toCellEntity instanceof FoodEntity) {
 			/** @var BotEntity $fromCellEntity */
 			$fromCellEntity->upEnergy($toCellEntity->energy);
-		}
-		if($toCellEntity instanceof ToxicEntity) {
+		} elseif($toCellEntity instanceof ToxicEntity) {
 			$fromCellEntity->downEnergy($toCellEntity->energy);
 		}
+		$fromCellEntity->downEnergy(5);
 	}
 	
 }

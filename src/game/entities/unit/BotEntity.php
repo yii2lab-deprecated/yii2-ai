@@ -4,7 +4,6 @@ namespace yii2lab\ai\game\entities\unit;
 
 use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\enums\ColorEnum;
-use yii2lab\ai\game\helpers\PossibleHelper;
 use yii2lab\ai\game\interfaces\BotLogicInterface;
 use yii2lab\extension\common\helpers\ClassHelper;
 
@@ -29,23 +28,6 @@ class BotEntity extends BaseEnergyEntity {
 	public function setLogic($definition) {
 		$this->logic = ClassHelper::createInstance($definition, [], BotLogicInterface::class);
 		$this->logic->setBot($this);
-	}
-	
-	public function getColor() {
-		if($this->isDead()) {
-			return ColorEnum::BLACK;
-		}
-		if($this->energy > 100) {
-			return ColorEnum::CYAN;
-		}
-		return ColorEnum::BLUE;
-	}
-	
-	public function getContent() {
-		if($this->isDead()) {
-			return 'xx';
-		}
-		return '..';
 	}
 	
 	public function step() {

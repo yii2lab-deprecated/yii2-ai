@@ -26,8 +26,8 @@ class Game {
 	 */
 	private $unitCollection;
 	
-	public function __construct($size) {
-		$matrix = UnitFactory::createMatrix($size);
+	public function __construct($height, $width) {
+		$matrix = UnitFactory::createMatrix($height, $width);
 		UnitFactory::createWalls($matrix);
 		UnitFactory::createFoods($matrix);
 		UnitFactory::createToxic($matrix);

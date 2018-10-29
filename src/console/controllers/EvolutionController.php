@@ -10,10 +10,11 @@ use yii2lab\extension\console\helpers\Output;
 class EvolutionController extends Controller {
 	
 	public function actionIndex() {
-		$size = 25;
-		$game = new Game($size);
+		$height = 20;
+		$width = 20;
+		$game = new Game($height, $width);
 		$game->setRender(ConsoleRender::class);
-		$game->run(1);
+		$game->run(5);
 		Output::block('Game over!');
 	}
 	

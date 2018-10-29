@@ -34,9 +34,9 @@ class UnitFactory {
 		],
 	];*/
 	
-	public static function createMatrix($size) {
+	public static function createMatrix($height, $width) {
 		$FoodEntity = new BlankCellEntity();
-		$matrix = new Matrix($size, $size, $FoodEntity);
+		$matrix = new Matrix($height, $width, $FoodEntity);
 		return $matrix;
 	}
 	
@@ -49,22 +49,25 @@ class UnitFactory {
 	
 	public static function createWalls(Matrix $matrix) {
 		for($y = 1; $y < 4; $y++) {
-			self::randV($matrix);
+			//self::randV($matrix);
 		}
 	}
 	
 	private static function randV(Matrix $matrix) {
 		
+		$halfWidth = round($matrix->getWidth() / 2);
+		$halfHeight = round($matrix->getHeight() / 2);
+		
 		$len = rand(3, 8);
-		$begin = rand(1, $matrix->getWidth() - 8);
-		$y = rand(2, $matrix->getWidth() - 1);
+		$begin = rand(1, $halfWidth - $len);
+		$y = rand(2, $halfWidth - 1);
 		for($x1 = $begin; $x1 < $begin + $len; $x1++) {
 			self::createWall($matrix, $x1, $y);
 		}
 		
 		$len = rand(3, 8);
-		$begin = rand(1, $matrix->getHeight() - 8);
-		$y = rand(2, $matrix->getHeight() - 1);
+		$begin = rand(1, $halfHeight - $len);
+		$y = rand(2, $halfHeight - 1);
 		for($x1 = $begin; $x1 < $begin + $len; $x1++) {
 			self::createWall($matrix, $y, $x1);
 		}
