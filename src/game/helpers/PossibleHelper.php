@@ -3,8 +3,8 @@
 namespace yii2lab\ai\game\helpers;
 
 use yii\base\BaseObject;
-use yii2lab\ai\game\entities\unit\BlankCellEntity;
-use yii2lab\ai\game\entities\unit\CellEntity;
+use yii2lab\ai\game\entities\unit\BlankEntity;
+use yii2lab\ai\game\entities\unit\BaseUnitEntity;
 use yii2lab\ai\game\entities\unit\FoodEntity;
 use yii2lab\ai\game\entities\unit\ToxicEntity;
 use yii2lab\ai\game\entities\unit\WallEntity;
@@ -19,7 +19,7 @@ class PossibleHelper {
 		[
 			'class' => IsPossibleScenario::class,
 			'possibleClasses' => [
-				BlankCellEntity::class,
+				BlankEntity::class,
 				FoodEntity::class,
 				ToxicEntity::class,
 			],
@@ -32,15 +32,15 @@ class PossibleHelper {
 	/**
 	 * @param array $map
 	 *
-	 * @return CellEntity[]|EntityCollection
+	 * @return BaseUnitEntity[]|EntityCollection
 	 */
 	public static function getPossibles(array $map) {
-		$collection = new EntityCollection(CellEntity::class);
-		/** @var CellEntity[][] $map */
+		$collection = new EntityCollection(BaseUnitEntity::class);
+		/** @var BaseUnitEntity[][] $map */
 		foreach($map as $line) {
-			foreach($line as $toCellEntity) {
-				if(self::isPossible($toCellEntity)) {
-					$collection[] = $toCellEntity;
+			foreach($line as $toBaseUnitEntity) {
+				if(self::isPossible($toBaseUnitEntity)) {
+					$collection[] = $toBaseUnitEntity;
 				}
 			}
 		}
@@ -53,12 +53,12 @@ class PossibleHelper {
 		return $filterCollection->runIs();
 	}
 	
-	private static function isPossible(CellEntity $toCellEntity = null) {
-		if($toCellEntity == null) {
+	private static function isPossible(BaseUnitEntity $toBaseUnitEntity = null) {
+		if($toBaseUnitEntity == null) {
 			return false;
 		}
 		$event = new MoveEvent();
-		$event->toCellEntity = $toCellEntity;
+		$event->toBaseUnitEntity = $toBaseUnitEntity;
 		$isCanReplace = self::runScenarios($event, self::$possibleStepFilters);
 		if(!$isCanReplace) {
 			return false;

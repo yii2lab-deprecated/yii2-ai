@@ -9,8 +9,8 @@ use yii\helpers\Console;
 use yii2lab\ai\domain\entities\BotEntity;
 use yii2lab\ai\domain\helpers\ClassifyHelper;
 use yii2lab\ai\domain\helpers\TrainHelper;
-use yii2lab\ai\game\entities\unit\BlankCellEntity;
-use yii2lab\ai\game\entities\unit\CellEntity;
+use yii2lab\ai\game\entities\unit\BlankEntity;
+use yii2lab\ai\game\entities\unit\BaseUnitEntity;
 use yii2lab\ai\game\entities\unit\FoodEntity;
 use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\entities\unit\BotEntity;
@@ -77,10 +77,10 @@ class TestController extends Controller {
 		$matrix = new Matrix();
 		$matrix->createMatrix($size, $size);
 		
-		$sourceClosure = function ($x, $y, CellEntity $cellEntity) use ($trainCollection) {
+		$sourceClosure = function ($x, $y, BaseUnitEntity $BaseUnitEntity) use ($trainCollection) {
 			foreach($trainCollection as $train) {
 				if($train['sample'] == [$x, $y]) {
-					$cellEntity->color = $train['label'];
+					$BaseUnitEntity->color = $train['label'];
 				}
 			}
 		};
@@ -89,8 +89,8 @@ class TestController extends Controller {
 		usleep(300000);
 		
 		$classifier = $this->trainMatrix($matrix);
-		$predictClosure = function ($x, $y, CellEntity $cellEntity) use ($classifier) {
-			$cellEntity->color = $classifier->predict([$x, $y]);
+		$predictClosure = function ($x, $y, BaseUnitEntity $BaseUnitEntity) use ($classifier) {
+			$BaseUnitEntity->color = $classifier->predict([$x, $y]);
 		};
 		$this->renderMatrix($matrix, $predictClosure);
 	}
@@ -101,10 +101,10 @@ class TestController extends Controller {
 		$samples = $labels = [];
 		
 		foreach($matrix->getMatrix() as $x => $line) {
-			foreach($line as $y => $cellEntity) {
-				if($cellEntity->color) {
+			foreach($line as $y => $BaseUnitEntity) {
+				if($BaseUnitEntity->color) {
 					$samples[] = [$x, $y];
-					$labels[] = $cellEntity->color;
+					$labels[] = $BaseUnitEntity->color;
 				}
 			}
 		}

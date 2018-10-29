@@ -3,29 +3,29 @@
 namespace yii2lab\ai\game\helpers;
 
 use Closure;
-use yii2lab\ai\game\entities\unit\CellEntity;
+use yii2lab\ai\game\entities\unit\BaseUnitEntity;
 use yii2lab\extension\console\helpers\Output;
 
 class MatrixHelper {
 	
 	public static function fillMatrix(Matrix $matrix, Closure $closure) {
-		/** @var CellEntity[][] $matrix */
+		/** @var BaseUnitEntity[][] $matrix */
 		foreach($matrix->getMatrix() as $x => $line) {
-			foreach($line as $y => $cellEntity) {
-				$closure($x, $y, $cellEntity);
+			foreach($line as $y => $BaseUnitEntity) {
+				$closure($x, $y, $BaseUnitEntity);
 			}
 		}
 	}
 	
 	public static function generateMatrix(Matrix $matrix) {
 		$lineArr = [];
-		/** @var CellEntity[][] $matrix */
+		/** @var BaseUnitEntity[][] $matrix */
 		foreach($matrix->getMatrix() as $line) {
 			$line1 = [];
-			foreach($line as $cellEntity) {
-				$content = $cellEntity->content;
+			foreach($line as $BaseUnitEntity) {
+				$content = $BaseUnitEntity->content;
 				$content .= str_repeat(SPC, 2 - strlen($content));
-				$line1[] = Output::wrap($content, $cellEntity->color);
+				$line1[] = Output::wrap($content, $BaseUnitEntity->color);
 			}
 			$lineArr[] = $line1;
 		}

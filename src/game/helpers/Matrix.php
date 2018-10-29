@@ -2,8 +2,8 @@
 
 namespace yii2lab\ai\game\helpers;
 
-use yii2lab\ai\game\entities\unit\BlankCellEntity;
-use yii2lab\ai\game\entities\unit\CellEntity;
+use yii2lab\ai\game\entities\unit\BlankEntity;
+use yii2lab\ai\game\entities\unit\BaseUnitEntity;
 use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\entities\unit\BotEntity;
 use yii2lab\ai\game\events\MoveEvent;
@@ -16,16 +16,16 @@ use yii2lab\extension\yii\helpers\ArrayHelper;
 class Matrix {
 	
 	/**
-	 * @var CellEntity[][]
+	 * @var BaseUnitEntity[][]
 	 */
 	private $matrix = [];
 	private $height;
 	private $width;
 	
-	public function __construct($height, $width, CellEntity $blankCellEntity = null) {
+	public function __construct($height, $width, BaseUnitEntity $BlankEntity = null) {
 		$this->height = $height;
 		$this->width = $width;
-		$this->createMatrix($height, $width, $blankCellEntity);
+		$this->createMatrix($height, $width, $BlankEntity);
 	}
 	
 	public function getMatrix() {
@@ -40,23 +40,23 @@ class Matrix {
 		return $this->width;
 	}
 	
-	private function onMove(BotEntity $fromCellEntity, CellEntity $toCellEntity) {
+	private function onMove(BotEntity $fromBaseUnitEntity, BaseUnitEntity $toBaseUnitEntity) {
 		$filters = [
 			EnergyScenario::class,
 		];
 		$filterCollection = new ScenarioCollection($filters);
 		$event = new MoveEvent;
-		$event->fromCellEntity = $fromCellEntity;
-		$event->toCellEntity = $toCellEntity;
+		$event->fromBaseUnitEntity = $fromBaseUnitEntity;
+		$event->toBaseUnitEntity = $toBaseUnitEntity;
 		$filterCollection->event = $event;
 		$filterCollection->runAll();
 	}
 	
-	public function moveCellEntity(BotEntity $cellEntity, PointEntity $toPointEntity) {
-		$fromPointEntity = clone $cellEntity->point;
-		$toCellEntity = $this->getCellByPoint($toPointEntity);
-		$this->onMove($cellEntity, $toCellEntity);
-		$this->setCellByPoint($toPointEntity, $cellEntity);
+	public function moveBaseUnitEntity(BotEntity $BaseUnitEntity, PointEntity $toPointEntity) {
+		$fromPointEntity = clone $BaseUnitEntity->point;
+		$toBaseUnitEntity = $this->getCellByPoint($toPointEntity);
+		$this->onMove($BaseUnitEntity, $toBaseUnitEntity);
+		$this->setCellByPoint($toPointEntity, $BaseUnitEntity);
 		$this->removeCellByPoint($fromPointEntity);
 	}
 	
@@ -66,12 +66,12 @@ class Matrix {
 		return $possibles;
 	}
 	
-	public function setCellByPoint(PointEntity $pointEntity, CellEntity $cellEntity = null) {
+	public function setCellByPoint(PointEntity $pointEntity, BaseUnitEntity $BaseUnitEntity = null) {
 		$this->validatePoint($pointEntity);
-		$this->forgeCellEntity($cellEntity, $pointEntity);
-		$cellEntity->point = clone $pointEntity;
-		$cellEntity->validate();
-		$this->matrix[ $pointEntity->x ][ $pointEntity->y ] = $cellEntity;
+		$this->forgeBaseUnitEntity($BaseUnitEntity, $pointEntity);
+		$BaseUnitEntity->point = clone $pointEntity;
+		$BaseUnitEntity->validate();
+		$this->matrix[ $pointEntity->x ][ $pointEntity->y ] = $BaseUnitEntity;
 	}
 	
 	private function getCellsByPoint(PointEntity $pointEntity, $size = 1) {
@@ -79,7 +79,7 @@ class Matrix {
 		$endX = $pointEntity->x + $size;
 		$beginY = $pointEntity->y - $size;
 		$endY = $pointEntity->y + $size;
-		/** @var CellEntity[][] $res */
+		/** @var BaseUnitEntity[][] $res */
 		$res = [];
 		for($x = $beginX; $x <= $endX; $x++) {
 			$line = [];
@@ -93,13 +93,13 @@ class Matrix {
 	
 	private function removeCellByPoint(PointEntity $pointEntity) {
 		$this->validatePoint($pointEntity);
-		$this->createCellEntity($pointEntity, BlankCellEntity::class);
+		$this->createBaseUnitEntity($pointEntity, BlankEntity::class);
 	}
 	
 	/**
 	 * @param PointEntity $pointEntity
 	 *
-	 * @return CellEntity
+	 * @return BaseUnitEntity
 	 */
 	private function getCellByPoint(PointEntity $pointEntity) {
 		try {
@@ -110,33 +110,33 @@ class Matrix {
 		return ArrayHelper::getValue($this->matrix, $pointEntity->x . DOT . $pointEntity->y, null);
 	}
 	
-	private function createMatrix(int $h, int $v, CellEntity $blankCellEntity = null) {
-		$blankCellEntityMain = $blankCellEntity instanceof CellEntity ? $blankCellEntity : new BlankCellEntity;
+	private function createMatrix(int $h, int $v, BaseUnitEntity $BlankEntity = null) {
+		$BlankEntityMain = $BlankEntity instanceof BaseUnitEntity ? $BlankEntity : new BlankEntity;
 		$pointEntity = new PointEntity;
 		for($x = 1; $x <= $h; $x++) {
 			for($y = 1; $y <= $v; $y++) {
 				$pointEntity->x = $x;
 				$pointEntity->y = $y;
-				$blankCellEntity = clone $blankCellEntityMain;
-				$this->forgeCellEntity($blankCellEntity, $pointEntity);
-				$this->setCellByPoint($pointEntity, $blankCellEntity);
+				$BlankEntity = clone $BlankEntityMain;
+				$this->forgeBaseUnitEntity($BlankEntity, $pointEntity);
+				$this->setCellByPoint($pointEntity, $BlankEntity);
 			}
 		}
 	}
 	
-	private function forgeCellEntity(CellEntity $cellEntity, PointEntity $pointEntity) {
+	private function forgeBaseUnitEntity(BaseUnitEntity $BaseUnitEntity, PointEntity $pointEntity) {
 		try {
-			$cellEntity->matrix = $this;
+			$BaseUnitEntity->matrix = $this;
 		} catch(ReadOnlyException $e) {}
-		$cellEntity->point = clone $pointEntity;
-		$cellEntity->validate();
+		$BaseUnitEntity->point = clone $pointEntity;
+		$BaseUnitEntity->validate();
 	}
 	
-	private function createCellEntity(PointEntity $pointEntity, $className) {
-		/** @var CellEntity $cellEntity */
-		$cellEntity = new $className;
-		$this->setCellByPoint($pointEntity, $cellEntity);
-		return $cellEntity;
+	private function createBaseUnitEntity(PointEntity $pointEntity, $className) {
+		/** @var BaseUnitEntity $BaseUnitEntity */
+		$BaseUnitEntity = new $className;
+		$this->setCellByPoint($pointEntity, $BaseUnitEntity);
+		return $BaseUnitEntity;
 	}
 	
 	private function validatePoint(PointEntity $pointEntity) {

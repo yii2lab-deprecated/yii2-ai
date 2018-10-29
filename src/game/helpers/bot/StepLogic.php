@@ -3,7 +3,7 @@
 namespace yii2lab\ai\game\helpers\bot;
 
 use yii2lab\ai\game\entities\unit\BotEntity;
-use yii2lab\ai\game\entities\unit\CellEntity;
+use yii2lab\ai\game\entities\unit\BaseUnitEntity;
 use yii2lab\ai\game\entities\unit\FoodEntity;
 use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\interfaces\BotLogicInterface;
@@ -27,22 +27,22 @@ class StepLogic implements BotLogicInterface {
 	}
 	
 	private function seekFoodPoint($possibles) {
-		$possibleCellEntity = null;
-		foreach($possibles as $cellEntity) {
-			if($cellEntity instanceof FoodEntity) {
-				if($possibleCellEntity == null) {
-					$possibleCellEntity = $cellEntity;
-				} elseif($cellEntity->energy > $possibleCellEntity->energy) {
-					$possibleCellEntity = $cellEntity;
+		$possibleBaseUnitEntity = null;
+		foreach($possibles as $BaseUnitEntity) {
+			if($BaseUnitEntity instanceof FoodEntity) {
+				if($possibleBaseUnitEntity == null) {
+					$possibleBaseUnitEntity = $BaseUnitEntity;
+				} elseif($BaseUnitEntity->energy > $possibleBaseUnitEntity->energy) {
+					$possibleBaseUnitEntity = $BaseUnitEntity;
 				}
 			}
 		}
-		return $possibleCellEntity->point;
+		return $possibleBaseUnitEntity->point;
 	}
 	
 	private function randPoint($possibles) {
 		$randIndex = mt_rand(0, count($possibles) - 1);
-		/** @var CellEntity[] $possibles */
+		/** @var BaseUnitEntity[] $possibles */
 		$p = $possibles[ $randIndex ]->point;
 		return $p;
 	}

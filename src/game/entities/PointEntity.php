@@ -5,7 +5,7 @@ namespace yii2lab\ai\game\entities;
 use yii2lab\domain\BaseEntity;
 
 /**
- * Class CellEntity
+ * Class BaseUnitEntity
  *
  * @package yii2lab\ai\game\entities\unit
  *

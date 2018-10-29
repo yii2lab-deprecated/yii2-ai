@@ -3,7 +3,7 @@
 namespace yii2lab\ai\console\commands;
 
 use yii2lab\ai\game\entities\unit\BotEntity;
-use yii2lab\ai\game\entities\unit\CellEntity;
+use yii2lab\ai\game\entities\unit\BaseUnitEntity;
 use yii2lab\ai\game\entities\unit\FoodEntity;
 use yii2lab\ai\game\entities\unit\ToxicEntity;
 use yii2lab\ai\game\entities\unit\WallEntity;
@@ -22,8 +22,8 @@ class ConsoleRender implements RenderInterface {
 		$lineArr = [];
 		foreach($map as $line) {
 			$line1 = [];
-			foreach($line as $cellEntity) {
-				$line1[] = $this->renderUnit($cellEntity);
+			foreach($line as $BaseUnitEntity) {
+				$line1[] = $this->renderUnit($BaseUnitEntity);
 			}
 			$lineArr[] = $line1;
 		}
@@ -31,31 +31,31 @@ class ConsoleRender implements RenderInterface {
 		return $text;
 	}
 	
-	private function renderUnit(CellEntity $cellEntity) {
+	private function renderUnit(BaseUnitEntity $BaseUnitEntity) {
 		$content = SPC;
 		
-		if($cellEntity instanceof BotEntity) {
-			if($cellEntity->isDead()) {
+		if($BaseUnitEntity instanceof BotEntity) {
+			if($BaseUnitEntity->isDead()) {
 				$content = 'xx';
 				$color = ColorEnum::BLACK;
 			} else {
 				$content = '..';
 				$color = ColorEnum::BLUE;
-				if($cellEntity->energy > 100) {
+				if($BaseUnitEntity->energy > 100) {
 					$color = ColorEnum::CYAN;
 				}
 			}
 		}
 		
-		if($cellEntity instanceof WallEntity) {
+		if($BaseUnitEntity instanceof WallEntity) {
 			$color = ColorEnum::YELLOW;
 		}
 		
-		if($cellEntity instanceof FoodEntity) {
+		if($BaseUnitEntity instanceof FoodEntity) {
 			$color = ColorEnum::GREEN;
 		}
 		
-		if($cellEntity instanceof ToxicEntity) {
+		if($BaseUnitEntity instanceof ToxicEntity) {
 			$color = ColorEnum::RED;
 		}
 		

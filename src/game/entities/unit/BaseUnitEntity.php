@@ -10,14 +10,14 @@ use yii2lab\domain\exceptions\ReadOnlyException;
 use yii2lab\extension\common\helpers\ClassHelper;
 
 /**
- * Class CellEntity
+ * Class BaseUnitEntity
  *
  * @package yii2lab\ai\game\entities\unit
  *
  * @property PointEntity $point
  * @property Matrix $matrix
  */
-abstract class CellEntity extends BaseEntity {
+abstract class BaseUnitEntity extends BaseEntity {
 	
 	protected $point;
 	private $matrix;

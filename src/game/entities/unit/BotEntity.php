@@ -35,7 +35,7 @@ class BotEntity extends BaseEnergyEntity {
 		}
 		$wantCell = $this->wantCell();
 		if($wantCell) {
-			$this->matrix->moveCellEntity($this, $wantCell);
+			$this->matrix->moveBaseUnitEntity($this, $wantCell);
 		}
 	}
 	

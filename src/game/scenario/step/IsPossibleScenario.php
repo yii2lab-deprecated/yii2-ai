@@ -18,7 +18,7 @@ class IsPossibleScenario extends BaseScenario {
 	public $notPossibleClasses = [];
 	
 	public function run() {
-		$className = get_class($this->event->toCellEntity);
+		$className = get_class($this->event->toBaseUnitEntity);
 		if(in_array($className, $this->possibleClasses)) {
 			return true;
 		}

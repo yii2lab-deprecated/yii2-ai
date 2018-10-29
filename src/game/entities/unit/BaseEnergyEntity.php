@@ -11,7 +11,7 @@ use yii2lab\domain\exceptions\ReadOnlyException;
  *
  * @property $energy
  */
-class BaseEnergyEntity extends CellEntity {
+class BaseEnergyEntity extends BaseUnitEntity {
 	
 	private $energy;
 	

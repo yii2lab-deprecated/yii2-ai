@@ -3,18 +3,18 @@
 namespace yii2lab\ai\game\events;
 
 use yii\base\BaseObject;
-use yii2lab\ai\game\entities\unit\CellEntity;
+use yii2lab\ai\game\entities\unit\BaseUnitEntity;
 
 class MoveEvent extends BaseObject {
 	
 	/**
-	 * @var CellEntity
+	 * @var BaseUnitEntity
 	 */
-	public $fromCellEntity;
+	public $fromBaseUnitEntity;
 	
 	/**
-	 * @var CellEntity
+	 * @var BaseUnitEntity
 	 */
-	public $toCellEntity;
+	public $toBaseUnitEntity;
 	
 }

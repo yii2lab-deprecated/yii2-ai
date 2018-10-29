@@ -12,38 +12,38 @@ class GameMatrixTest extends Unit {
 	const PACKAGE = 'yii2lab/yii2-ai';
 	
 	/*public function testMove() {
-		$cellEntity = $this->createCell();
+		$BaseUnitEntity = $this->createCell();
 		
-		$this->tester->assertEquals(15, $cellEntity->point->y);
-		$this->tester->assertEquals(15, $cellEntity->point->x);
+		$this->tester->assertEquals(15, $BaseUnitEntity->point->y);
+		$this->tester->assertEquals(15, $BaseUnitEntity->point->x);
 		
-		$cellEntity->moveRight();
-		$this->tester->assertEquals(16, $cellEntity->point->y);
+		$BaseUnitEntity->moveRight();
+		$this->tester->assertEquals(16, $BaseUnitEntity->point->y);
 		
-		$cellEntity->moveLeft(2);
-		$this->tester->assertEquals(14, $cellEntity->point->y);
+		$BaseUnitEntity->moveLeft(2);
+		$this->tester->assertEquals(14, $BaseUnitEntity->point->y);
 		
-		$cellEntity->moveUp();
-		$this->tester->assertEquals(14, $cellEntity->point->x);
+		$BaseUnitEntity->moveUp();
+		$this->tester->assertEquals(14, $BaseUnitEntity->point->x);
 		
-		$cellEntity->moveDown(2);
-		$this->tester->assertEquals(16, $cellEntity->point->x);
+		$BaseUnitEntity->moveDown(2);
+		$this->tester->assertEquals(16, $BaseUnitEntity->point->x);
 	}
 	
 	public function testMoveOverMatrix() {
-		$cellEntity = $this->createCell();
+		$BaseUnitEntity = $this->createCell();
 		
-		$cellEntity->moveLeft(15);
-		$this->tester->assertEquals(15, $cellEntity->point->y);
+		$BaseUnitEntity->moveLeft(15);
+		$this->tester->assertEquals(15, $BaseUnitEntity->point->y);
 		
-		$cellEntity->moveUp(15);
-		$this->tester->assertEquals(15, $cellEntity->point->x);
+		$BaseUnitEntity->moveUp(15);
+		$this->tester->assertEquals(15, $BaseUnitEntity->point->x);
 		
-		$cellEntity->moveRight(2);
-		$this->tester->assertEquals(15, $cellEntity->point->y);
+		$BaseUnitEntity->moveRight(2);
+		$this->tester->assertEquals(15, $BaseUnitEntity->point->y);
 		
-		$cellEntity->moveDown(2);
-		$this->tester->assertEquals(15, $cellEntity->point->x);
+		$BaseUnitEntity->moveDown(2);
+		$this->tester->assertEquals(15, $BaseUnitEntity->point->x);
 	}
 	
 	private function createCell($x = 15, $y = 15) {
@@ -51,9 +51,9 @@ class GameMatrixTest extends Unit {
 		$pointEntity = new PointEntity();
 		$pointEntity->y = $y;
 		$pointEntity->x = $x;
-		$cellEntity = $matrix->getCellByPoint($pointEntity);
-		$cellEntity->color = ColorEnum::RED;
-		return $cellEntity;
+		$BaseUnitEntity = $matrix->getCellByPoint($pointEntity);
+		$BaseUnitEntity->color = ColorEnum::RED;
+		return $BaseUnitEntity;
 	}
 	
 	private function createMatrix() {

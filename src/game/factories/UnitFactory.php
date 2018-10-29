@@ -3,8 +3,8 @@
 namespace yii2lab\ai\game\factories;
 
 use yii\base\BaseObject;
-use yii2lab\ai\game\entities\unit\BlankCellEntity;
-use yii2lab\ai\game\entities\unit\CellEntity;
+use yii2lab\ai\game\entities\unit\BlankEntity;
+use yii2lab\ai\game\entities\unit\BaseUnitEntity;
 use yii2lab\ai\game\entities\unit\FoodEntity;
 use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\entities\unit\ToxicEntity;
@@ -35,7 +35,7 @@ class UnitFactory {
 	];*/
 	
 	public static function createMatrix($height, $width) {
-		$FoodEntity = new BlankCellEntity();
+		$FoodEntity = new BlankEntity();
 		$matrix = new Matrix($height, $width, $FoodEntity);
 		return $matrix;
 	}
@@ -82,7 +82,7 @@ class UnitFactory {
 	public static function createFoods(Matrix $matrix) {
 		foreach($matrix->getMatrix() as $x => $line) {
 			foreach($line as $y => $cell) {
-				if($cell instanceof BlankCellEntity) {
+				if($cell instanceof BlankEntity) {
 					if(!mt_rand(0, 1)) {
 						$energy = mt_rand(1, 4) * 2;
 						self::createFood($matrix, $cell, FoodEntity::class, $energy);
@@ -95,7 +95,7 @@ class UnitFactory {
 	public static function createToxic(Matrix $matrix) {
 		foreach($matrix->getMatrix() as $x => $line) {
 			foreach($line as $y => $cell) {
-				if($cell instanceof BlankCellEntity) {
+				if($cell instanceof BlankEntity) {
 					if(!mt_rand(0, 6)) {
 						$energy = mt_rand(1, 4) * 2;
 						self::createFood($matrix, $cell, ToxicEntity::class, 0 - $energy);
@@ -105,7 +105,7 @@ class UnitFactory {
 		}
 	}
 	
-	private static function createFood(Matrix $matrix, CellEntity $cell, $class, $energy) {
+	private static function createFood(Matrix $matrix, BaseUnitEntity $cell, $class, $energy) {
 		$food = new $class;
 		$food->energy = $energy;
 		$matrix->setCellByPoint($cell->point, $food);
