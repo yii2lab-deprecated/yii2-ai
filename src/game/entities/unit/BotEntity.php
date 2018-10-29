@@ -6,7 +6,6 @@ use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\enums\ColorEnum;
 use yii2lab\ai\game\helpers\PossibleHelper;
 use yii2lab\ai\game\interfaces\BotLogicInterface;
-use yii2lab\domain\exceptions\ReadOnlyException;
 use yii2lab\extension\common\helpers\ClassHelper;
 
 /**
@@ -15,14 +14,12 @@ use yii2lab\extension\common\helpers\ClassHelper;
  * @package yii2lab\ai\game\entities\unit
  * @property $energy
  */
-class BotEntity extends CellEntity {
+class BotEntity extends BaseEnergyEntity {
 	
 	const DIR_UP = 1;
 	const DIR_RIGHT = 2;
 	const DIR_DOWN = 3;
 	const DIR_LEFT = 4;
-	
-	private $energy;
 	
 	/**
 	 * @var BotLogicInterface
@@ -61,45 +58,12 @@ class BotEntity extends CellEntity {
 		}
 	}
 	
-	public function isDead() {
-		return $this->getEnergy() <= 0;
-	}
-	
-	public function kill() {
-		return $this->energy = 0;
-	}
-
-	public function upEnergy($step = 1) {
-		$this->energy = $this->getEnergy() + $step;
-	}
-	
-	public function downEnergy($step = 1) {
-		$this->energy = $this->getEnergy() - $step;
-	}
-	
-	public function getEnergy() {
-		return $this->energy;
-	}
-	
-	public function setEnergy($value) {
-		if(isset($this->energy)) {
-			throw new ReadOnlyException('Energy attribute read only!');
-		}
-		$this->energy = $value;
-	}
-	
 	/**
 	 * @return PointEntity|boolean
 	 */
 	private function wantCell() {
-		$possibles = $this->getPossibles();
+		$possibles = $this->matrix->getPossibleCollection($this->point);
 		return $this->logic->getPoint($possibles);
-	}
-	
-	private function getPossibles() {
-		$map = $this->matrix->getCellsByPoint($this->point);
-		$possibles = PossibleHelper::getPossibles($map);
-		return $possibles;
 	}
 	
 }

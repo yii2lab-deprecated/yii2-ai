@@ -2,7 +2,6 @@
 
 namespace yii2lab\ai\game\helpers;
 
-use yii\base\InvalidArgumentException;
 use yii2lab\ai\game\entities\unit\BlankCellEntity;
 use yii2lab\ai\game\entities\unit\CellEntity;
 use yii2lab\ai\game\entities\PointEntity;
@@ -59,6 +58,12 @@ class Matrix {
 		$this->onMove($cellEntity, $toCellEntity);
 		$this->setCellByPoint($toPointEntity, $cellEntity);
 		$this->removeCellByPoint($fromPointEntity);
+	}
+	
+	public function getPossibleCollection(PointEntity $pointEntity) {
+		$map = $this->getCellsByPoint($pointEntity);
+		$possibles = PossibleHelper::getPossibles($map);
+		return $possibles;
 	}
 	
 	public function getCellsByPoint(PointEntity $pointEntity, $size = 1) {

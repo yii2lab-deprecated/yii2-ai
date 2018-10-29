@@ -29,18 +29,22 @@ class PossibleHelper {
 		],
 	];
 	
-	public static function getPossibles($map) {
-		/** @var EntityCollection|CellEntity[] $possibles */
-		$possibles = new EntityCollection(CellEntity::class);
+	/**
+	 * @param array $map
+	 *
+	 * @return CellEntity[]|EntityCollection
+	 */
+	public static function getPossibles(array $map) {
+		$collection = new EntityCollection(CellEntity::class);
 		/** @var CellEntity[][] $map */
 		foreach($map as $line) {
 			foreach($line as $toCellEntity) {
 				if(self::isPossible($toCellEntity)) {
-					$possibles[] = $toCellEntity;
+					$collection[] = $toCellEntity;
 				}
 			}
 		}
-		return $possibles;
+		return $collection;
 	}
 	
 	private static function runScenarios(BaseObject $event, array $filters) {

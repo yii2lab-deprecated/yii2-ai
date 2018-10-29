@@ -11,9 +11,8 @@ use yii2lab\ai\game\enums\ColorEnum;
  *
  * @property $energy
  */
-class ToxicEntity extends CellEntity {
+class ToxicEntity extends BaseEnergyEntity {
 
 	public $color = ColorEnum::RED;
-	protected $energy = -2;
 	
 }
