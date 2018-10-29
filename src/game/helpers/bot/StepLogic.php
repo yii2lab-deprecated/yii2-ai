@@ -2,29 +2,28 @@
 
 namespace yii2lab\ai\game\helpers\bot;
 
+use yii2lab\ai\game\entities\unit\BotEntity;
 use yii2lab\ai\game\entities\unit\CellEntity;
 use yii2lab\ai\game\entities\unit\FoodEntity;
 use yii2lab\ai\game\entities\PointEntity;
-use yii2lab\ai\game\entities\unit\BotEntity;
-use yii2lab\ai\game\helpers\PossibleHelper;
 use yii2lab\ai\game\interfaces\BotLogicInterface;
+use yii2lab\domain\data\EntityCollection;
 
 class StepLogic implements BotLogicInterface {
 	
-	public function getPoint(BotEntity $botEntity) {
-		$possibles = $this->getPossibles($botEntity);
+	private $bot;
+	
+	public function setBot(BotEntity $botEntity) {
+		$this->bot = $botEntity;
+	}
+	
+	public function getPoint(EntityCollection $possibles) {
 		/** @var PointEntity $pointEntity */
 		$pointEntity = $this->seekFoodPoint($possibles);
 		if(empty($pointEntity)) {
 			$pointEntity = $this->randPoint($possibles);
 		}
 		return $pointEntity;
-	}
-	
-	private function getPossibles(BotEntity $botEntity) {
-		$map = $botEntity->matrix->getCellsByPoint($botEntity->point);
-		$possibles = PossibleHelper::getPossibles($map);
-		return $possibles;
 	}
 	
 	private function seekFoodPoint($possibles) {

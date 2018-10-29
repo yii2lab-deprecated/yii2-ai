@@ -10,6 +10,7 @@ use yii2lab\ai\game\entities\unit\ToxicEntity;
 use yii2lab\ai\game\entities\unit\WallEntity;
 use yii2lab\ai\game\events\MoveEvent;
 use yii2lab\ai\game\scenario\step\IsPossibleScenario;
+use yii2lab\domain\data\EntityCollection;
 use yii2lab\extension\scenario\collections\ScenarioCollection;
 
 class PossibleHelper {
@@ -29,7 +30,8 @@ class PossibleHelper {
 	];
 	
 	public static function getPossibles($map) {
-		$possibles = [];
+		/** @var EntityCollection|CellEntity[] $possibles */
+		$possibles = new EntityCollection(CellEntity::class);
 		/** @var CellEntity[][] $map */
 		foreach($map as $line) {
 			foreach($line as $toCellEntity) {

@@ -46,7 +46,7 @@ class Game {
 	
 	private function tick() {
 		foreach($this->unitCollection as $botEntity) {
-			$this->stepUnit($botEntity);
+			$botEntity->step();
 		}
 		$this->runOutputHandler();
 		usleep($this->usleep);
@@ -77,10 +77,4 @@ class Game {
 		return $info;
 	}
 	
-	private function stepUnit(BotEntity $botEntity) {
-		$wantCell = $botEntity->wantCell();
-		if($wantCell) {
-			$botEntity->matrix->moveCellEntity($botEntity, $wantCell);
-		}
-	}
 }

@@ -7,6 +7,7 @@ use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\helpers\Matrix;
 use yii2lab\domain\BaseEntity;
 use yii2lab\domain\exceptions\ReadOnlyException;
+use yii2lab\extension\common\helpers\ClassHelper;
 
 /**
  * Class CellEntity
@@ -15,15 +16,15 @@ use yii2lab\domain\exceptions\ReadOnlyException;
  *
  * @property $color
  * @property $content
- * @property Matrix $matrix
  * @property PointEntity $point
+ * @property Matrix $matrix
  */
 abstract class CellEntity extends BaseEntity {
 	
 	protected $color;
 	protected $content;
-	private $matrix;
 	protected $point;
+	private $matrix;
 	
 	public function behaviors() {
 		return [
@@ -34,7 +35,6 @@ abstract class CellEntity extends BaseEntity {
 	public function fieldType() {
 		return [
 			'color' => 'integer',
-			'matrix' => Matrix::class,
 			'point' => PointEntity::class,
 		];
 	}
@@ -45,7 +45,7 @@ abstract class CellEntity extends BaseEntity {
 		];
 	}
 	
-	public function getMatrix() {
+	protected function getMatrix() {
 		return $this->matrix;
 	}
 	
@@ -53,6 +53,7 @@ abstract class CellEntity extends BaseEntity {
 		if(isset($this->matrix)) {
 			throw new ReadOnlyException('Matrix already assigned!');
 		}
+		ClassHelper::isInstanceOf($value, Matrix::class);
 		$this->matrix = $value;
 	}
 	

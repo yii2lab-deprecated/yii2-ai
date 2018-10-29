@@ -10,6 +10,7 @@ use yii2lab\ai\game\entities\unit\BotEntity;
 use yii2lab\ai\game\events\MoveEvent;
 use yii2lab\ai\game\exceptions\PointOverMatrixException;
 use yii2lab\ai\game\scenario\step\EnergyScenario;
+use yii2lab\domain\exceptions\ReadOnlyException;
 use yii2lab\extension\scenario\collections\ScenarioCollection;
 use yii2lab\extension\yii\helpers\ArrayHelper;
 
@@ -119,13 +120,9 @@ class Matrix {
 	}
 	
 	private function forgeCellEntity(CellEntity $cellEntity, PointEntity $pointEntity) {
-		if($cellEntity->matrix && $cellEntity->matrix !== $this) {
-			throw new InvalidArgumentException('Bad matrix!');
-		}
-		$matrix = $cellEntity->matrix;
-		if($matrix == null) {
+		try {
 			$cellEntity->matrix = $this;
-		}
+		} catch(ReadOnlyException $e) {}
 		$cellEntity->point = clone $pointEntity;
 		$cellEntity->validate();
 	}

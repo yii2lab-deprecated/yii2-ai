@@ -4,6 +4,7 @@ namespace yii2lab\ai\game\entities\unit;
 
 use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\enums\ColorEnum;
+use yii2lab\ai\game\helpers\PossibleHelper;
 use yii2lab\ai\game\interfaces\BotLogicInterface;
 use yii2lab\domain\exceptions\ReadOnlyException;
 use yii2lab\extension\common\helpers\ClassHelper;
@@ -28,14 +29,9 @@ class BotEntity extends CellEntity {
 	 */
 	private $logic;
 	
-	public function fieldType() {
-		return [
-			'logic' => BotLogicInterface::class,
-		];
-	}
-	
 	public function setLogic($definition) {
 		$this->logic = ClassHelper::createInstance($definition, [], BotLogicInterface::class);
+		$this->logic->setBot($this);
 	}
 	
 	public function getColor() {
@@ -55,20 +51,24 @@ class BotEntity extends CellEntity {
 		return '..';
 	}
 	
-	/**
-	 * @return PointEntity|boolean
-	 */
-	public function wantCell() {
+	public function step() {
 		if($this->isDead()) {
-			return false;
+			return;
 		}
-		return $this->logic->getPoint($this);
+		$wantCell = $this->wantCell();
+		if($wantCell) {
+			$this->matrix->moveCellEntity($this, $wantCell);
+		}
 	}
 	
 	public function isDead() {
 		return $this->getEnergy() <= 0;
 	}
 	
+	public function kill() {
+		return $this->energy = 0;
+	}
+
 	public function upEnergy($step = 1) {
 		$this->energy = $this->getEnergy() + $step;
 	}
@@ -86,6 +86,20 @@ class BotEntity extends CellEntity {
 			throw new ReadOnlyException('Energy attribute read only!');
 		}
 		$this->energy = $value;
+	}
+	
+	/**
+	 * @return PointEntity|boolean
+	 */
+	private function wantCell() {
+		$possibles = $this->getPossibles();
+		return $this->logic->getPoint($possibles);
+	}
+	
+	private function getPossibles() {
+		$map = $this->matrix->getCellsByPoint($this->point);
+		$possibles = PossibleHelper::getPossibles($map);
+		return $possibles;
 	}
 	
 }
