@@ -15,8 +15,4 @@ class WallCellEntity extends CellEntity {
 
 	public $color = ColorEnum::YELLOW;
 	
-	public function isCanReplace() {
-		return false;
-	}
-	
 }

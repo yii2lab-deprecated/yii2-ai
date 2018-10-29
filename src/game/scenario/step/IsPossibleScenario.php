@@ -14,9 +14,15 @@ use yii2lab\extension\scenario\exceptions\StopException;
  */
 class IsPossibleScenario extends BaseScenario {
 	
+	public $possibleClasses = [];
+	public $notPossibleClasses = [];
+	
 	public function run() {
-		$isCanReplace = $this->event->toCellEntity->isCanReplace();
-		if(!$isCanReplace) {
+		$className = get_class($this->event->toCellEntity);
+		if(in_array($className, $this->possibleClasses)) {
+			return true;
+		}
+		if(in_array($className, $this->notPossibleClasses)) {
 			throw new StopException;
 		}
 	}

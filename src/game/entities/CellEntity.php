@@ -24,8 +24,6 @@ abstract class CellEntity extends BaseEntity {
 	private $matrix;
 	protected $point;
 	
-	abstract public function isCanReplace();
-	
 	public function behaviors() {
 		return [
 			ValidateFilter::class,

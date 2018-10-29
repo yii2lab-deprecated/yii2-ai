@@ -11,7 +11,7 @@ use yii2lab\ai\game\entities\ToxicCellEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 use yii2lab\ai\game\entities\WallCellEntity;
 use yii2lab\ai\game\events\UnitEvent;
-use yii2lab\ai\game\helpers\botLogic\StepLogic;
+use yii2lab\ai\game\helpers\bot\StepLogic;
 use yii2lab\ai\game\helpers\Matrix;
 use yii2lab\ai\game\scenario\factory\unit\CreateUnitScenario;
 use yii2lab\ai\game\scenario\factory\unit\SetUnitEnergyScenario;
@@ -20,7 +20,7 @@ use yii2lab\extension\scenario\collections\ScenarioCollection;
 
 class UnitFactory {
 	
-	private static $unitFilters = [
+	/*private static $unitFilters = [
 		[
 			'class' => CreateUnitScenario::class,
 		],
@@ -32,7 +32,7 @@ class UnitFactory {
 			'class' => SetUnitLogicScenario::class,
 			'logicClass' => StepLogic::class,
 		],
-	];
+	];*/
 	
 	public static function createMatrix($size) {
 		$foodCellEntity = new BlankCellEntity();
@@ -131,23 +131,30 @@ class UnitFactory {
 		/** @var UnitCellEntity[] $unitCollection */
 		$unitCollection = [];
 		foreach($points as $point) {
-			$unitCollection[] = self::createUnit($matrix, $point);
+			$pointEntity = UnitFactory::createPoint($point['x'], $point['y']);
+			$unitCollection[] = self::createUnit($matrix, $pointEntity);
 		}
 		return $unitCollection;
 	}
 	
-	private static function createUnit(Matrix $matrix, $point) {
-		$event = new UnitEvent;
+	private static function createUnit(Matrix $matrix, $pointEntity) {
+		$unitCellEntity = new UnitCellEntity();
+		$matrix->setCellByPoint($pointEntity, $unitCellEntity);
+		$unitCellEntity->energy = 20;
+		$unitCellEntity->setLogic(StepLogic::class);
+		return $unitCellEntity;
+		
+		/*$event = new UnitEvent;
 		$event->matrix = $matrix;
 		$event->pointEntity = UnitFactory::createPoint($point['x'], $point['y']);
 		self::runScenarios($event, self::$unitFilters);
-		return $event->unitCellEntity;
+		return $event->unitCellEntity;*/
 	}
 	
-	private static function runScenarios(BaseObject $event, array $filters) {
+	/*private static function runScenarios(BaseObject $event, array $filters) {
 		$filterCollection = new ScenarioCollection($filters);
 		$filterCollection->event = $event;
 		$filterCollection->runAll();
-	}
+	}*/
 	
 }

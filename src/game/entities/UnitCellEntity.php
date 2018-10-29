@@ -3,7 +3,9 @@
 namespace yii2lab\ai\game\entities;
 
 use yii2lab\ai\game\enums\ColorEnum;
+use yii2lab\ai\game\interfaces\BotLogicInterface;
 use yii2lab\domain\exceptions\ReadOnlyException;
+use yii2lab\extension\common\helpers\ClassHelper;
 
 /**
  * Class UnitCellEntity
@@ -21,16 +23,18 @@ class UnitCellEntity extends CellEntity {
 	private $energy;
 	
 	/**
-	 * @var Object
+	 * @var BotLogicInterface
 	 */
-	private $logicInstance;
+	private $logic;
 	
-	public function setLogicInstance($logicClass) {
-		$this->logicInstance = \Yii::createObject($logicClass);
+	public function fieldType() {
+		return [
+			'logic' => BotLogicInterface::class,
+		];
 	}
 	
-	public function isCanReplace() {
-		return false;
+	public function setLogic($definition) {
+		$this->logic = ClassHelper::createInstance($definition, [], BotLogicInterface::class);
 	}
 	
 	public function getColor() {
@@ -57,7 +61,7 @@ class UnitCellEntity extends CellEntity {
 		if($this->isDead()) {
 			return false;
 		}
-		return $this->logicInstance->getPoint($this);
+		return $this->logic->getPoint($this);
 	}
 	
 	public function isDead() {

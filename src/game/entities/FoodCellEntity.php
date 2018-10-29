@@ -16,12 +16,4 @@ class FoodCellEntity extends CellEntity {
 	public $color = ColorEnum::GREEN;
 	protected $energy = 2;
 	
-	public function isCanReplace() {
-		return true;
-	}
-	
-	/*public function getContent() {
-		return $this->energy;
-	}*/
-	
 }
