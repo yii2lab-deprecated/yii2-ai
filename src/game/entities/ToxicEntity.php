@@ -5,13 +5,13 @@ namespace yii2lab\ai\game\entities;
 use yii2lab\ai\game\enums\ColorEnum;
 
 /**
- * Class ToxicCellEntity
+ * Class ToxicEntity
  *
  * @package yii2lab\ai\game\entities
  *
  * @property $energy
  */
-class ToxicCellEntity extends CellEntity {
+class ToxicEntity extends CellEntity {
 
 	public $color = ColorEnum::RED;
 	protected $energy = -2;

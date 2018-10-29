@@ -5,15 +5,14 @@ namespace yii2lab\ai\game\entities;
 use yii2lab\ai\game\enums\ColorEnum;
 
 /**
- * Class FoodCellEntity
+ * Class FoodEntity
  *
  * @package yii2lab\ai\game\entities
  *
  * @property $energy
  */
-class FoodCellEntity extends CellEntity {
+class WallEntity extends CellEntity {
 
-	public $color = ColorEnum::GREEN;
-	protected $energy = 2;
+	public $color = ColorEnum::YELLOW;
 	
 }

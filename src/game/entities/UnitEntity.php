@@ -8,12 +8,12 @@ use yii2lab\domain\exceptions\ReadOnlyException;
 use yii2lab\extension\common\helpers\ClassHelper;
 
 /**
- * Class UnitCellEntity
+ * Class UnitEntity
  *
  * @package yii2lab\ai\game\entities
  * @property $energy
  */
-class UnitCellEntity extends CellEntity {
+class UnitEntity extends CellEntity {
 	
 	const DIR_UP = 1;
 	const DIR_RIGHT = 2;

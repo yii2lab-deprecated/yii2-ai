@@ -3,9 +3,9 @@
 namespace yii2lab\ai\game\scenario\step;
 
 use yii2lab\ai\game\entities\CellEntity;
-use yii2lab\ai\game\entities\FoodCellEntity;
-use yii2lab\ai\game\entities\ToxicCellEntity;
-use yii2lab\ai\game\entities\UnitCellEntity;
+use yii2lab\ai\game\entities\FoodEntity;
+use yii2lab\ai\game\entities\ToxicEntity;
+use yii2lab\ai\game\entities\UnitEntity;
 use yii2lab\ai\game\events\MoveEvent;
 use yii2lab\extension\scenario\base\BaseScenario;
 
@@ -22,11 +22,11 @@ class EnergyScenario extends BaseScenario {
 	}
 	
 	private function onMove(CellEntity $fromCellEntity, CellEntity $toCellEntity) {
-		if($toCellEntity instanceof FoodCellEntity) {
-			/** @var UnitCellEntity $fromCellEntity */
+		if($toCellEntity instanceof FoodEntity) {
+			/** @var UnitEntity $fromCellEntity */
 			$fromCellEntity->upEnergy($toCellEntity->energy);
 		}
-		if($toCellEntity instanceof ToxicCellEntity) {
+		if($toCellEntity instanceof ToxicEntity) {
 			$fromCellEntity->downEnergy($toCellEntity->energy);
 		}
 	}

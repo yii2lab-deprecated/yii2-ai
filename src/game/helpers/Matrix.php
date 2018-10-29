@@ -6,7 +6,7 @@ use yii\base\InvalidArgumentException;
 use yii2lab\ai\game\entities\BlankCellEntity;
 use yii2lab\ai\game\entities\CellEntity;
 use yii2lab\ai\game\entities\PointEntity;
-use yii2lab\ai\game\entities\UnitCellEntity;
+use yii2lab\ai\game\entities\UnitEntity;
 use yii2lab\ai\game\events\MoveEvent;
 use yii2lab\ai\game\exceptions\PointOverMatrixException;
 use yii2lab\ai\game\scenario\step\EnergyScenario;
@@ -40,7 +40,7 @@ class Matrix {
 		return $this->width;
 	}
 	
-	private function onMove(UnitCellEntity $fromCellEntity, CellEntity $toCellEntity) {
+	private function onMove(UnitEntity $fromCellEntity, CellEntity $toCellEntity) {
 		$filters = [
 			EnergyScenario::class,
 		];
@@ -52,7 +52,7 @@ class Matrix {
 		$filterCollection->runAll();
 	}
 	
-	public function moveCellEntity(UnitCellEntity $cellEntity, PointEntity $toPointEntity) {
+	public function moveCellEntity(UnitEntity $cellEntity, PointEntity $toPointEntity) {
 		$fromPointEntity = clone $cellEntity->point;
 		$toCellEntity = $this->getCellByPoint($toPointEntity);
 		$this->onMove($cellEntity, $toCellEntity);

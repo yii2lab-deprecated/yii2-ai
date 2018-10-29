@@ -5,9 +5,9 @@ namespace yii2lab\ai\game\helpers;
 use yii\base\BaseObject;
 use yii2lab\ai\game\entities\BlankCellEntity;
 use yii2lab\ai\game\entities\CellEntity;
-use yii2lab\ai\game\entities\FoodCellEntity;
-use yii2lab\ai\game\entities\ToxicCellEntity;
-use yii2lab\ai\game\entities\WallCellEntity;
+use yii2lab\ai\game\entities\FoodEntity;
+use yii2lab\ai\game\entities\ToxicEntity;
+use yii2lab\ai\game\entities\WallEntity;
 use yii2lab\ai\game\events\MoveEvent;
 use yii2lab\ai\game\scenario\step\IsPossibleScenario;
 use yii2lab\extension\scenario\collections\ScenarioCollection;
@@ -19,11 +19,11 @@ class PossibleHelper {
 			'class' => IsPossibleScenario::class,
 			'possibleClasses' => [
 				BlankCellEntity::class,
-				FoodCellEntity::class,
-				ToxicCellEntity::class,
+				FoodEntity::class,
+				ToxicEntity::class,
 			],
 			'notPossibleClasses' => [
-				WallCellEntity::class,
+				WallEntity::class,
 			],
 		],
 	];

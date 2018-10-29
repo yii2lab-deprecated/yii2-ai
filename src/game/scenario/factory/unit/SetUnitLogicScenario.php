@@ -16,7 +16,7 @@ class SetUnitLogicScenario extends BaseScenario {
 	public $logicClass;
 	
 	public function run() {
-		$this->event->unitCellEntity->setLogic($this->logicClass);
+		$this->event->UnitEntity->setLogic($this->logicClass);
 	}
 	
 }

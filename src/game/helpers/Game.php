@@ -2,7 +2,7 @@
 
 namespace yii2lab\ai\game\helpers;
 
-use yii2lab\ai\game\entities\UnitCellEntity;
+use yii2lab\ai\game\entities\UnitEntity;
 use yii2lab\ai\game\factories\UnitFactory;
 
 class Game {
@@ -16,7 +16,7 @@ class Game {
 	private $outputHandler;
 	
 	/**
-	 * @var UnitCellEntity[]
+	 * @var UnitEntity[]
 	 */
 	private $unitCollection;
 	
@@ -77,7 +77,7 @@ class Game {
 		return $info;
 	}
 	
-	private function stepUnit(UnitCellEntity $unitEntity) {
+	private function stepUnit(UnitEntity $unitEntity) {
 		$wantCell = $unitEntity->wantCell();
 		if($wantCell) {
 			$unitEntity->matrix->moveCellEntity($unitEntity, $wantCell);

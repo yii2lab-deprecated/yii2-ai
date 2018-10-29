@@ -5,11 +5,11 @@ namespace yii2lab\ai\game\factories;
 use yii\base\BaseObject;
 use yii2lab\ai\game\entities\BlankCellEntity;
 use yii2lab\ai\game\entities\CellEntity;
-use yii2lab\ai\game\entities\FoodCellEntity;
+use yii2lab\ai\game\entities\FoodEntity;
 use yii2lab\ai\game\entities\PointEntity;
-use yii2lab\ai\game\entities\ToxicCellEntity;
-use yii2lab\ai\game\entities\UnitCellEntity;
-use yii2lab\ai\game\entities\WallCellEntity;
+use yii2lab\ai\game\entities\ToxicEntity;
+use yii2lab\ai\game\entities\UnitEntity;
+use yii2lab\ai\game\entities\WallEntity;
 use yii2lab\ai\game\events\UnitEvent;
 use yii2lab\ai\game\helpers\bot\StepLogic;
 use yii2lab\ai\game\helpers\Matrix;
@@ -35,8 +35,8 @@ class UnitFactory {
 	];*/
 	
 	public static function createMatrix($size) {
-		$foodCellEntity = new BlankCellEntity();
-		$matrix = new Matrix($size, $size, $foodCellEntity);
+		$FoodEntity = new BlankCellEntity();
+		$matrix = new Matrix($size, $size, $FoodEntity);
 		return $matrix;
 	}
 	
@@ -71,7 +71,7 @@ class UnitFactory {
 	}
 	
 	private static function createWall(Matrix $matrix, $x, $y) {
-		$wall = new WallCellEntity();
+		$wall = new WallEntity();
 		$point = UnitFactory::createPoint($x, $y);
 		$matrix->setCellByPoint($point, $wall);
 	}
@@ -82,7 +82,7 @@ class UnitFactory {
 				if($cell instanceof BlankCellEntity) {
 					if(!mt_rand(0, 1)) {
 						$energy = mt_rand(1, 4) * 2;
-						self::createFood($matrix, $cell, FoodCellEntity::class, $energy);
+						self::createFood($matrix, $cell, FoodEntity::class, $energy);
 					}
 				}
 			}
@@ -95,7 +95,7 @@ class UnitFactory {
 				if($cell instanceof BlankCellEntity) {
 					if(!mt_rand(0, 6)) {
 						$energy = mt_rand(1, 4) * 2;
-						self::createFood($matrix, $cell, ToxicCellEntity::class, 0 - $energy);
+						self::createFood($matrix, $cell, ToxicEntity::class, 0 - $energy);
 					}
 				}
 			}
@@ -128,7 +128,7 @@ class UnitFactory {
 				'y' => 15,
 			],
 		];
-		/** @var UnitCellEntity[] $unitCollection */
+		/** @var UnitEntity[] $unitCollection */
 		$unitCollection = [];
 		foreach($points as $point) {
 			$pointEntity = UnitFactory::createPoint($point['x'], $point['y']);
@@ -138,17 +138,17 @@ class UnitFactory {
 	}
 	
 	private static function createUnit(Matrix $matrix, $pointEntity) {
-		$unitCellEntity = new UnitCellEntity();
-		$matrix->setCellByPoint($pointEntity, $unitCellEntity);
-		$unitCellEntity->energy = 20;
-		$unitCellEntity->setLogic(StepLogic::class);
-		return $unitCellEntity;
+		$UnitEntity = new UnitEntity();
+		$matrix->setCellByPoint($pointEntity, $UnitEntity);
+		$UnitEntity->energy = 20;
+		$UnitEntity->setLogic(StepLogic::class);
+		return $UnitEntity;
 		
 		/*$event = new UnitEvent;
 		$event->matrix = $matrix;
 		$event->pointEntity = UnitFactory::createPoint($point['x'], $point['y']);
 		self::runScenarios($event, self::$unitFilters);
-		return $event->unitCellEntity;*/
+		return $event->UnitEntity;*/
 	}
 	
 	/*private static function runScenarios(BaseObject $event, array $filters) {

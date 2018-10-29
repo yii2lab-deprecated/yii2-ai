@@ -2,10 +2,10 @@
 
 namespace yii2lab\ai\game\interfaces;
 
-use yii2lab\ai\game\entities\UnitCellEntity;
+use yii2lab\ai\game\entities\UnitEntity;
 
 interface BotLogicInterface {
 	
-	public function getPoint(UnitCellEntity $unitCellEntity);
+	public function getPoint(UnitEntity $UnitEntity);
 	
 }
