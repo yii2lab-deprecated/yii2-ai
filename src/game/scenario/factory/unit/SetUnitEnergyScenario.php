@@ -16,7 +16,7 @@ class SetUnitEnergyScenario extends BaseScenario {
 	public $energy;
 	
 	public function run() {
-		$this->event->UnitEntity->energy = $this->energy;
+		$this->event->BotEntity->energy = $this->energy;
 	}
 	
 }

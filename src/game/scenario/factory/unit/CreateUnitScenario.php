@@ -2,7 +2,7 @@
 
 namespace yii2lab\ai\game\scenario\factory\unit;
 
-use yii2lab\ai\game\entities\UnitEntity;
+use yii2lab\ai\game\entities\unit\BotEntity;
 use yii2lab\ai\game\events\UnitEvent;
 use yii2lab\extension\scenario\base\BaseScenario;
 
@@ -17,8 +17,8 @@ class CreateUnitScenario extends BaseScenario {
 	public $logicClass;
 	
 	public function run() {
-		$this->event->UnitEntity = new UnitEntity();
-		$this->event->matrix->setCellByPoint($this->event->pointEntity, $this->event->UnitEntity);
+		$this->event->BotEntity = new BotEntity();
+		$this->event->matrix->setCellByPoint($this->event->pointEntity, $this->event->BotEntity);
 	}
 	
 }

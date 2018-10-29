@@ -7,7 +7,7 @@ use yii2lab\domain\BaseEntity;
 /**
  * Class CellEntity
  *
- * @package yii2lab\ai\game\entities
+ * @package yii2lab\ai\game\entities\unit
  *
  * @property $x
  * @property $y

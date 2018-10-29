@@ -3,7 +3,7 @@
 namespace yii2lab\ai\game\helpers;
 
 use Closure;
-use yii2lab\ai\game\entities\CellEntity;
+use yii2lab\ai\game\entities\unit\CellEntity;
 use yii2lab\extension\console\helpers\Output;
 
 class MatrixHelper {

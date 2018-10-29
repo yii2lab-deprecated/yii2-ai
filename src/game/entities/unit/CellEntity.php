@@ -1,8 +1,9 @@
 <?php
 
-namespace yii2lab\ai\game\entities;
+namespace yii2lab\ai\game\entities\unit;
 
 use yii2lab\ai\game\behaviors\ValidateFilter;
+use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\helpers\Matrix;
 use yii2lab\domain\BaseEntity;
 use yii2lab\domain\exceptions\ReadOnlyException;
@@ -10,7 +11,7 @@ use yii2lab\domain\exceptions\ReadOnlyException;
 /**
  * Class CellEntity
  *
- * @package yii2lab\ai\game\entities
+ * @package yii2lab\ai\game\entities\unit
  *
  * @property $color
  * @property $content

@@ -1,19 +1,20 @@
 <?php
 
-namespace yii2lab\ai\game\entities;
+namespace yii2lab\ai\game\entities\unit;
 
+use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\enums\ColorEnum;
 use yii2lab\ai\game\interfaces\BotLogicInterface;
 use yii2lab\domain\exceptions\ReadOnlyException;
 use yii2lab\extension\common\helpers\ClassHelper;
 
 /**
- * Class UnitEntity
+ * Class BotEntity
  *
- * @package yii2lab\ai\game\entities
+ * @package yii2lab\ai\game\entities\unit
  * @property $energy
  */
-class UnitEntity extends CellEntity {
+class BotEntity extends CellEntity {
 	
 	const DIR_UP = 1;
 	const DIR_RIGHT = 2;

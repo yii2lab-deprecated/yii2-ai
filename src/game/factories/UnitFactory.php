@@ -3,13 +3,13 @@
 namespace yii2lab\ai\game\factories;
 
 use yii\base\BaseObject;
-use yii2lab\ai\game\entities\BlankCellEntity;
-use yii2lab\ai\game\entities\CellEntity;
-use yii2lab\ai\game\entities\FoodEntity;
+use yii2lab\ai\game\entities\unit\BlankCellEntity;
+use yii2lab\ai\game\entities\unit\CellEntity;
+use yii2lab\ai\game\entities\unit\FoodEntity;
 use yii2lab\ai\game\entities\PointEntity;
-use yii2lab\ai\game\entities\ToxicEntity;
-use yii2lab\ai\game\entities\UnitEntity;
-use yii2lab\ai\game\entities\WallEntity;
+use yii2lab\ai\game\entities\unit\ToxicEntity;
+use yii2lab\ai\game\entities\unit\BotEntity;
+use yii2lab\ai\game\entities\unit\WallEntity;
 use yii2lab\ai\game\events\UnitEvent;
 use yii2lab\ai\game\helpers\bot\StepLogic;
 use yii2lab\ai\game\helpers\Matrix;
@@ -128,7 +128,7 @@ class UnitFactory {
 				'y' => 15,
 			],
 		];
-		/** @var UnitEntity[] $unitCollection */
+		/** @var BotEntity[] $unitCollection */
 		$unitCollection = [];
 		foreach($points as $point) {
 			$pointEntity = UnitFactory::createPoint($point['x'], $point['y']);
@@ -138,17 +138,17 @@ class UnitFactory {
 	}
 	
 	private static function createUnit(Matrix $matrix, $pointEntity) {
-		$UnitEntity = new UnitEntity();
-		$matrix->setCellByPoint($pointEntity, $UnitEntity);
-		$UnitEntity->energy = 20;
-		$UnitEntity->setLogic(StepLogic::class);
-		return $UnitEntity;
+		$botEntity = new BotEntity();
+		$matrix->setCellByPoint($pointEntity, $botEntity);
+		$botEntity->energy = 20;
+		$botEntity->setLogic(StepLogic::class);
+		return $botEntity;
 		
 		/*$event = new UnitEvent;
 		$event->matrix = $matrix;
 		$event->pointEntity = UnitFactory::createPoint($point['x'], $point['y']);
 		self::runScenarios($event, self::$unitFilters);
-		return $event->UnitEntity;*/
+		return $event->BotEntity;*/
 	}
 	
 	/*private static function runScenarios(BaseObject $event, array $filters) {

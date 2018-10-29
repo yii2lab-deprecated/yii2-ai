@@ -2,7 +2,7 @@
 
 namespace yii2lab\ai\game\helpers;
 
-use yii2lab\ai\game\entities\UnitEntity;
+use yii2lab\ai\game\entities\unit\BotEntity;
 use yii2lab\ai\game\factories\UnitFactory;
 
 class Game {
@@ -16,7 +16,7 @@ class Game {
 	private $outputHandler;
 	
 	/**
-	 * @var UnitEntity[]
+	 * @var BotEntity[]
 	 */
 	private $unitCollection;
 	
@@ -45,8 +45,8 @@ class Game {
 	}
 	
 	private function tick() {
-		foreach($this->unitCollection as $unitEntity) {
-			$this->stepUnit($unitEntity);
+		foreach($this->unitCollection as $botEntity) {
+			$this->stepUnit($botEntity);
 		}
 		$this->runOutputHandler();
 		usleep($this->usleep);
@@ -59,9 +59,9 @@ class Game {
 	
 	private function getAllUnits() {
 		$units = [];
-		foreach($this->unitCollection as $unitEntity) {
-			if(!$unitEntity->isDead()) {
-				$units[] = $unitEntity;
+		foreach($this->unitCollection as $botEntity) {
+			if(!$botEntity->isDead()) {
+				$units[] = $botEntity;
 			}
 		}
 		return $units;
@@ -69,18 +69,18 @@ class Game {
 	
 	private function getUnitsInfo() {
 		$info = [];
-		foreach($this->unitCollection as $k => $unitEntity) {
-			if(!$unitEntity->isDead()) {
-				$info[] = 'unit '.$k.': ' . $unitEntity->energy;
+		foreach($this->unitCollection as $k => $botEntity) {
+			if(!$botEntity->isDead()) {
+				$info[] = 'unit '.$k.': ' . $botEntity->energy;
 			}
 		}
 		return $info;
 	}
 	
-	private function stepUnit(UnitEntity $unitEntity) {
-		$wantCell = $unitEntity->wantCell();
+	private function stepUnit(BotEntity $botEntity) {
+		$wantCell = $botEntity->wantCell();
 		if($wantCell) {
-			$unitEntity->matrix->moveCellEntity($unitEntity, $wantCell);
+			$botEntity->matrix->moveCellEntity($botEntity, $wantCell);
 		}
 	}
 }
