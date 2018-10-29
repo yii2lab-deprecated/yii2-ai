@@ -5,17 +5,23 @@ namespace yii2lab\ai\game\helpers\botLogic;
 use yii2lab\ai\game\entities\CellEntity;
 use yii2lab\ai\game\entities\FoodCellEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
+use yii2lab\ai\game\helpers\MatrixHelper;
 
 class FixLogic {
 	
 	public static function getPoint(UnitCellEntity $unitCellEntity) {
-		$map = $unitCellEntity->matrix->getCellsByPoint($unitCellEntity->point);
-		$possibles = self::getPossibles($map);
+		$possibles = self::getPossibles($unitCellEntity);
 		$pointEntity = self::seekFood($possibles);
 		if(empty($pointEntity)) {
 			$pointEntity = self::randPoint($possibles);
 		}
 		return $pointEntity;
+	}
+	
+	private static function getPossibles(UnitCellEntity $unitCellEntity) {
+		$map = $unitCellEntity->matrix->getCellsByPoint($unitCellEntity->point);
+		$possibles = MatrixHelper::getPossibles($map);
+		return $possibles;
 	}
 	
 	private static function seekFood($possibles) {
@@ -34,21 +40,8 @@ class FixLogic {
 	
 	private static function randPoint($possibles) {
 		$randIndex = mt_rand(0, count($possibles) - 1);
+		/** @var CellEntity[] $possibles */
 		$p = $possibles[ $randIndex ]->point;
 		return $p;
 	}
-	
-	private static function getPossibles($map) {
-		$possibles = [];
-		/** @var CellEntity[][] $map */
-		foreach($map as $line) {
-			foreach($line as $cell) {
-				if($cell != null && $cell->isCanReplace()) {
-					$possibles[] = $cell;
-				}
-			}
-		}
-		return $possibles;
-	}
-	
 }

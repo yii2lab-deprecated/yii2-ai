@@ -3,17 +3,17 @@
 namespace yii2lab\ai\game\entities;
 
 use yii2lab\ai\game\enums\ColorEnum;
+use yii2lab\domain\exceptions\ReadOnlyException;
 
 /**
  * Class UnitCellEntity
  *
  * @package yii2lab\ai\game\entities
- * @property-read $energy
+ * @property $energy
  */
 class UnitCellEntity extends CellEntity {
 	
-	protected $color = ColorEnum::BLUE;
-	private $energy = 10;
+	private $energy;
 	
 	/**
 	 * @var Object
@@ -32,7 +32,10 @@ class UnitCellEntity extends CellEntity {
 		if($this->isDead()) {
 			return ColorEnum::BLACK;
 		}
-		return $this->color;
+		if($this->energy > 100) {
+			return ColorEnum::CYAN;
+		}
+		return ColorEnum::BLUE;
 	}
 	
 	public function getContent() {
@@ -57,71 +60,22 @@ class UnitCellEntity extends CellEntity {
 	}
 	
 	public function upEnergy($step = 1) {
-		$energy = $this->getEnergy() + $step;
-		$this->setEnergy($energy);
+		$this->energy = $this->getEnergy() + $step;
 	}
 	
 	public function downEnergy($step = 1) {
-		$energy = $this->getEnergy() - $step;
-		$this->setEnergy($energy);
+		$this->energy = $this->getEnergy() - $step;
 	}
 	
 	public function getEnergy() {
 		return $this->energy;
 	}
 	
-	private function setEnergy($value) {
-		$this->energy = $value;
-		//$this->content = $value;
-		/*if($this->energy == 0) {
-			//$this->kill('Low energy');
-		}*/
-		/*if($this->energy == 20) {
-			$this->kill('Higth energy');
-		}*/
-	}
-	
-	/*private function kill($message = null) {
-		//$this->matrix->removeCellByPoint($this->point);
-		//$this->color = ColorEnum::CYAN;
-		//$this->matrix = null;
-		//throw new DeadUnitException($message);
-	}
-	
-	public function step($dir, $count = 1) {
-		if($dir == self::DIR_UP) {
-			$this->moveUp($count);
-		} elseif($dir == self::DIR_LEFT) {
-			$this->moveLeft($count);
-		} elseif($dir == self::DIR_DOWN) {
-			$this->moveDown($count);
-		} elseif($dir == self::DIR_RIGHT) {
-			$this->moveRight($count);
+	public function setEnergy($value) {
+		if(isset($this->energy)) {
+			throw new ReadOnlyException('Energy attribute read only!');
 		}
+		$this->energy = $value;
 	}
-	
-	private function moveUp($stepCount = 1) {
-		$toPointEntity = clone $this->point;
-		$toPointEntity->x = $toPointEntity->x - $stepCount;
-		$this->matrix->moveCellEntity($this, $toPointEntity);
-	}
-	
-	private function moveDown($stepCount = 1) {
-		$toPointEntity = clone $this->point;
-		$toPointEntity->x = $toPointEntity->x + $stepCount;
-		$this->matrix->moveCellEntity($this, $toPointEntity);
-	}
-	
-	private function moveLeft($stepCount = 1) {
-		$toPointEntity = clone $this->point;
-		$toPointEntity->y = $toPointEntity->y - $stepCount;
-		$this->matrix->moveCellEntity($this, $toPointEntity);
-	}
-	
-	private function moveRight($stepCount = 1) {
-		$toPointEntity = clone $this->point;
-		$toPointEntity->y = $toPointEntity->y + $stepCount;
-		$this->matrix->moveCellEntity($this, $toPointEntity);
-	}*/
 	
 }

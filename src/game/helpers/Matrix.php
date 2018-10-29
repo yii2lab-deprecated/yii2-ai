@@ -5,10 +5,11 @@ namespace yii2lab\ai\game\helpers;
 use yii\base\InvalidArgumentException;
 use yii2lab\ai\game\entities\BlankCellEntity;
 use yii2lab\ai\game\entities\CellEntity;
-use yii2lab\ai\game\entities\FoodCellEntity;
 use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 use yii2lab\ai\game\exceptions\PointOverMatrixException;
+use yii2lab\ai\game\scenario\step\FoodScenario;
+use yii2lab\extension\scenario\collections\ScenarioCollection;
 use yii2lab\extension\yii\helpers\ArrayHelper;
 
 class Matrix {
@@ -20,6 +21,16 @@ class Matrix {
 	private $height;
 	private $width;
 	
+	public function __construct($height, $width, CellEntity $blankCellEntity = null) {
+		$this->height = $height;
+		$this->width = $width;
+		$this->createMatrix($height, $width, $blankCellEntity);
+	}
+	
+	public function getMatrix() {
+		return $this->matrix;
+	}
+	
 	public function getHeight() {
 		return $this->height;
 	}
@@ -28,18 +39,15 @@ class Matrix {
 		return $this->width;
 	}
 	
-	public function __construct($height, $width, CellEntity $blankCellEntity = null) {
-		$this->height = $height;
-		$this->width = $width;
-		$this->createMatrix($height, $width, $blankCellEntity);
-	}
-	
-	private function onMove(UnitCellEntity $cellEntity, CellEntity $toCellEntity) {
-		if($toCellEntity instanceof FoodCellEntity) {
-			$cellEntity->upEnergy($toCellEntity->energy);
-		} else {
-			$cellEntity->downEnergy(5);
-		}
+	private function onMove(UnitCellEntity $fromCellEntity, CellEntity $toCellEntity) {
+		$filters = [
+			FoodScenario::class,
+		];
+		$filterCollection = new ScenarioCollection($filters);
+		$filterCollection->runAll([
+			'fromCellEntity' => $fromCellEntity,
+			'toCellEntity' => $toCellEntity,
+		]);
 	}
 	
 	public function moveCellEntity(UnitCellEntity $cellEntity, PointEntity $toPointEntity) {
@@ -73,10 +81,6 @@ class Matrix {
 		$cellEntity->point = clone $pointEntity;
 		$cellEntity->validate();
 		$this->matrix[ $pointEntity->x ][ $pointEntity->y ] = $cellEntity;
-	}
-	
-	public function getMatrix() {
-		return $this->matrix;
 	}
 	
 	private function removeCellByPoint(PointEntity $pointEntity) {

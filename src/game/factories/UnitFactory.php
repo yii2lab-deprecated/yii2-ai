@@ -2,6 +2,7 @@
 
 namespace yii2lab\ai\game\factories;
 
+use yii\base\BaseObject;
 use yii2lab\ai\game\entities\BlankCellEntity;
 use yii2lab\ai\game\entities\CellEntity;
 use yii2lab\ai\game\entities\FoodCellEntity;
@@ -9,10 +10,29 @@ use yii2lab\ai\game\entities\PointEntity;
 use yii2lab\ai\game\entities\ToxicCellEntity;
 use yii2lab\ai\game\entities\UnitCellEntity;
 use yii2lab\ai\game\entities\WallCellEntity;
-use yii2lab\ai\game\helpers\Matrix;
+use yii2lab\ai\game\events\UnitEvent;
 use yii2lab\ai\game\helpers\botLogic\FixLogic;
+use yii2lab\ai\game\helpers\Matrix;
+use yii2lab\ai\game\scenario\factory\unit\CreateUnitScenario;
+use yii2lab\ai\game\scenario\factory\unit\SetUnitEnergyScenario;
+use yii2lab\ai\game\scenario\factory\unit\SetUnitLogicScenario;
+use yii2lab\extension\scenario\collections\ScenarioCollection;
 
 class UnitFactory {
+	
+	private static $unitFilters = [
+		[
+			'class' => CreateUnitScenario::class,
+		],
+		[
+			'class' => SetUnitEnergyScenario::class,
+			'energy' => 20,
+		],
+		[
+			'class' => SetUnitLogicScenario::class,
+			'logicClass' => FixLogic::class,
+		],
+	];
 	
 	public static function createMatrix($size) {
 		$foodCellEntity = new BlankCellEntity();
@@ -112,18 +132,23 @@ class UnitFactory {
 		/** @var UnitCellEntity[] $unitCollection */
 		$unitCollection = [];
 		foreach($points as $point) {
-			$unitCellEntity = UnitFactory::createUnit($matrix, $point['x'], $point['y']);
-			$unitCellEntity->setLogicInstance(FixLogic::class);
-			$unitCollection[] = $unitCellEntity;
+			$unitCollection[] = self::createUnit($matrix, $point);
 		}
 		return $unitCollection;
 	}
 	
-	private static function createUnit(Matrix $matrix, $x, $y) {
-		$pointEntity = self::createPoint($x, $y);
-		$unitEntity = new UnitCellEntity();
-		$matrix->setCellByPoint($pointEntity, $unitEntity);
-		return $unitEntity;
+	private static function createUnit(Matrix $matrix, $point) {
+		$event = new UnitEvent;
+		$event->matrix = $matrix;
+		$event->pointEntity = UnitFactory::createPoint($point['x'], $point['y']);
+		self::runScenarios($event, self::$unitFilters);
+		return $event->unitCellEntity;
+	}
+	
+	private static function runScenarios(BaseObject $event, array $filters) {
+		$filterCollection = new ScenarioCollection($filters);
+		$filterCollection->event = $event;
+		$filterCollection->runAll();
 	}
 	
 }

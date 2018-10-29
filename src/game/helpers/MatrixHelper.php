@@ -8,6 +8,19 @@ use yii2lab\extension\console\helpers\Output;
 
 class MatrixHelper {
 	
+	public static function getPossibles($map) {
+		$possibles = [];
+		/** @var CellEntity[][] $map */
+		foreach($map as $line) {
+			foreach($line as $cell) {
+				if($cell != null && $cell->isCanReplace()) {
+					$possibles[] = $cell;
+				}
+			}
+		}
+		return $possibles;
+	}
+	
 	public static function fillMatrix(Matrix $matrix, Closure $closure) {
 		/** @var CellEntity[][] $matrix */
 		foreach($matrix->getMatrix() as $x => $line) {

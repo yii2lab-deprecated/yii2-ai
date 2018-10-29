@@ -11,7 +11,7 @@ class GameMatrixTest extends Unit {
 	
 	const PACKAGE = 'yii2lab/yii2-ai';
 	
-	public function testMove() {
+	/*public function testMove() {
 		$cellEntity = $this->createCell();
 		
 		$this->tester->assertEquals(15, $cellEntity->point->y);
@@ -61,6 +61,6 @@ class GameMatrixTest extends Unit {
 		$matrix = new Matrix();
 		$matrix->createMatrix($size, $size);
 		return $matrix;
-	}
+	}*/
 	
 }
